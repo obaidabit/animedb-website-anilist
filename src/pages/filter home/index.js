@@ -84,11 +84,23 @@ export default function Home() {
       !status &&
       !rating &&
       !keywords &&
+      !startDate &&
+      !endDate &&
       sort === "asc"
     ) {
       submitSearch();
     }
-  }, [orderBy, genre, animeType, status, rating, sort, startDate, endDate]);
+  }, [
+    orderBy,
+    genre,
+    animeType,
+    status,
+    rating,
+    sort,
+    startDate,
+    endDate,
+    keywords,
+  ]);
 
   useEffect(() => {
     if (firstRender) {

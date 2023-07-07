@@ -15,7 +15,9 @@ export default function CardList(props) {
 
   const handleClickEvent = (event) => {
     event.preventDefault();
-    navigate(`/details/${event.currentTarget.id}`);
+    // navigate(`/details/${event.currentTarget.id}`, "_blank");
+    const newTab = window.open(`/details/${event.currentTarget.id}`, "_blank");
+    newTab.focus();
   };
 
   useEffect(() => {

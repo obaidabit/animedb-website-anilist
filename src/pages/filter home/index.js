@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CardList from "../../components/card list";
 import { getAnimeGenreAPI, getSearchAPI } from "../../config";
 import { useDispatch } from "react-redux";
-import Pagination from "../../components/pagination";
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -20,6 +19,8 @@ export default function Home() {
   const [firstRender, setFirstRender] = useState(true);
   const [startDate, setstartDate] = useState("");
   const [endDate, setendDate] = useState("");
+  const startDateRef = useRef(null);
+  const endDateRef = useRef(null);
   const dispatch = useDispatch();
 
   function submitSearch() {
@@ -73,10 +74,21 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!orderBy && !genre && !animeType && !status && !rating && !keywords) {
+    if (firstRender) {
+      return;
+    }
+    if (
+      !orderBy &&
+      !genre &&
+      !animeType &&
+      !status &&
+      !rating &&
+      !keywords &&
+      sort === "asc"
+    ) {
       submitSearch();
     }
-  }, [orderBy, genre, animeType, status, rating]);
+  }, [orderBy, genre, animeType, status, rating, sort, startDate, endDate]);
 
   useEffect(() => {
     if (firstRender) {
@@ -88,10 +100,10 @@ export default function Home() {
 
   return (
     <div className="Home pt-5">
-      <div className="container flex flex-col items-center justify-center gap-5 px-10 mx-auto md:px-5">
+      <div className="container flex flex-col items-center justify-center gap-5 px-5 mx-auto md:px-5">
         <div className="flex flex-col items-center gap-5 md:flex-row ">
-          <div className="flex flex-row gap-5 flex-wrap">
-            <div className="relative inline-flex">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5 items-center">
+            <div className="relative inline-grid">
               <svg
                 className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +138,7 @@ export default function Home() {
                 <option value={"favorites"}>favorites</option>
               </select>
             </div>
-            <div className="relative inline-flex">
+            <div className="relative inline-grid">
               <svg
                 className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +156,7 @@ export default function Home() {
                 onChange={(e) =>
                   e.target.value ? setGenre(e.target.value) : null
                 }
-                className="h-10 pl-5 pr-10 transition-all duration-300 outline-none appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary focus:outline-none active:outline-none"
+                className="h-10 w-full pl-5 pr-10 transition-all duration-300 outline-none appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary focus:outline-none active:outline-none"
               >
                 <option value={""}>Genres</option>
                 {genres.map((genre) => (
@@ -154,7 +166,7 @@ export default function Home() {
                 ))}
               </select>
             </div>
-            <div className="relative inline-flex">
+            <div className="relative inline-grid">
               <svg
                 className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -183,9 +195,7 @@ export default function Home() {
                 <option value={"music"}>music</option>
               </select>
             </div>
-          </div>
-          <div className="flex flex-row gap-5 ">
-            <div className="relative inline-flex">
+            <div className="relative inline-grid">
               <svg
                 className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -211,7 +221,7 @@ export default function Home() {
                 <option value={"upcoming"}>upcoming</option>
               </select>
             </div>
-            <div className="relative inline-flex">
+            <div className="relative inline-grid">
               <svg
                 className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -229,7 +239,7 @@ export default function Home() {
                 onChange={(e) =>
                   e.target.value ? setRating(e.target.value) : null
                 }
-                className="h-10 pl-5 pr-10 transition-all duration-300 outline-none appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary focus:outline-none active:outline-none"
+                className="h-10 w-full pl-5 pr-10 transition-all duration-300 outline-none appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary focus:outline-none active:outline-none"
               >
                 <option value={""}>Rating</option>
                 <option value={"G"}>G - All Ages</option>
@@ -238,58 +248,93 @@ export default function Home() {
                 <option value={"r17"}>R - 17+ Adults</option>
               </select>
             </div>
-          </div>
+            <div className="relative inline-grid">
+              {sort === "asc" ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6 absolute top-0 right-0 mx-4 my-2 pointer-events-none"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 11l5-5m0 0l5 5m-5-5v12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6 absolute top-0 right-0 mx-4 my-2 pointer-events-none"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 13l-5 5m0 0l-5-5m5 5V6"
+                  />
+                </svg>
+              )}
 
-          <div className="relative inline-flex">
-            {sort === "asc" ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 absolute top-0 right-0 mx-4 my-2 pointer-events-none"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+              <button
+                onClick={() =>
+                  setSort((prev) => (prev === "asc" ? "desc" : "asc"))
+                }
+                className="h-10 pl-5 pr-10 transition-all duration-300 appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 11l5-5m0 0l5 5m-5-5v12"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 absolute top-0 right-0 mx-4 my-2 pointer-events-none"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                Sort
+              </button>
+            </div>
+            <div className="relative inline-grid col-span-full md:col-span-1">
+              <input
+                type="text"
+                placeholder="Search Anime"
+                value={keywords}
+                onChange={(e) => setKeywords(e.target.value)}
+                className="border-cyan-500 border w-full px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-full focus:outline-none transition-colors duration-300"
+              />
+            </div>
+            <div className="border-2 py-1 px-3 rounded-lg gap-3 border-cyan-500 flex items-center">
+              <label
+                onClick={() => startDateRef.current.showPicker()}
+                htmlFor="start-date"
+                className="text-xs"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 13l-5 5m0 0l-5-5m5 5V6"
-                />
-              </svg>
-            )}
-
-            <button
-              onClick={() =>
-                setSort((prev) => (prev === "asc" ? "desc" : "asc"))
-              }
-              className="h-10 pl-5 pr-10 transition-all duration-300 appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
-            >
-              Sort
-            </button>
-          </div>
-          <div className="relative inline-flex">
-            <input
-              type="text"
-              placeholder="Search Anime"
-              value={keywords}
-              onChange={(e) => setKeywords(e.target.value)}
-              className="border-cyan-500 border w-full md:w-32 px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-full focus:outline-none transition-colors duration-300"
-            />
+                Start Date:
+              </label>
+              <input
+                type="date"
+                ref={startDateRef}
+                id="start-date"
+                className="rounded border-1 focus:outline-none dark:bg-transparent dark:text-white"
+                value={startDate}
+                onChange={(e) => setstartDate(e.target.value)}
+                onClick={(e) => e.target.showPicker()}
+              />
+            </div>
+            <div className="border-2 py-1 px-3 rounded-lg gap-3 border-cyan-500 flex items-center">
+              <label
+                htmlFor="end-date"
+                onClick={() => endDateRef.current.showPicker()}
+                className="text-xs"
+              >
+                End Date:
+              </label>
+              <input
+                onClick={(e) => e.target.showPicker()}
+                type="date"
+                id="end-date"
+                ref={endDateRef}
+                className="rounded border-1 focus:outline-none dark:bg-transparent dark:text-white"
+                value={endDate}
+                onChange={(e) => setendDate(e.target.value)}
+              />
+            </div>
           </div>
         </div>
         <div className="gap-3 flex">
@@ -308,27 +353,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="gap-5 flex justify-center align-center flex-wrap">
-          <div className="border-2 py-1 px-3 rounded-lg gap-3 border-cyan-500 flex">
-            <label htmlFor="start-date">Start Date:</label>
-            <input
-              type="date"
-              id="start-date"
-              value={startDate}
-              onChange={(e) => setstartDate(e.target.value)}
-            />
-          </div>
-          <div className="border-2 py-1 px-3 rounded-lg gap-3 border-cyan-500 flex">
-            <label htmlFor="end-date">End Date:</label>
-            <input
-              type="date"
-              id="end-date"
-              className="rounded border-1"
-              value={endDate}
-              onChange={(e) => setendDate(e.target.value)}
-            />
-          </div>
-        </div>
+        <div className="gap-5 flex justify-center items-center flex-wrap"></div>
       </div>
       <div className="flex flex-col justify-between min-h-screen">
         <CardList
@@ -344,7 +369,7 @@ export default function Home() {
             onClick={() => {
               setCurrentPage((prev) => (prev <= 0 ? 0 : prev - 1));
             }}
-            className="py-2 px-4 disabled:bg-gray-300 text-white bg-blue-400 rounded-xl"
+            className="disabled:bg-gray-300 disabled:dark:bg-gray-700 px-5 py-2 text-lg transition-all duration-300 rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
           >
             Prev
           </button>
@@ -359,7 +384,7 @@ export default function Home() {
             onClick={() => {
               setCurrentPage((prev) => prev + 1);
             }}
-            className="py-2 px-4 disabled:bg-gray-300  text-white bg-blue-400 rounded-xl"
+            className="px-5 py-2 text-lg disabled:bg-gray-300 disabled:dark:bg-gray-700 transition-all duration-300 rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
           >
             Next
           </button>

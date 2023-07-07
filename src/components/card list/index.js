@@ -104,7 +104,8 @@ export default function CardList(props) {
                     key={data.mal_id}
                     id={data.mal_id}
                     onClick={handleClickEvent}
-                    className="relative w-full px-1 py-1 overflow-hidden transition-all duration-200 lg:w-full lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:bg-white lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
+                    className="relative w-full px-1 text-center py-1 dark:text-white overflow-hidden transition-all duration-200 lg:w-full lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:text-white lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
+                    // className="relative w-full px-1 py-1 overflow-hidden transition-all duration-200 lg:w-full lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:bg-white lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
                   >
                     {props?.rank ? (
                       <p className="hidden text-xl text-center lg:block">
@@ -117,7 +118,7 @@ export default function CardList(props) {
                       className="object-cover w-full h-32 md:h-80 lg:h-60 xl:h-80 rounded-xl"
                     />
                     <p
-                      className={`text-center mx-auto overflow-hidden max-w-superMini text-ellipsis whitespace-nowrap md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-black text-sm md:text-lg lg:text-xl font-semibold`}
+                      className={`text-center mx-auto overflow-hidden max-w-superMini text-ellipsis whitespace-nowrap md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-white text-sm md:text-lg lg:text-xl font-semibold`}
                     >
                       {data.title}
                     </p>

@@ -1,3 +1,5 @@
+# This is a modified version of [animedb-website](https://github.com/MFaqihRidho/animedb-website)
+
 <div id="top"></div>
 <!--
 *** Thanks for checking out the Best-README-Template. If you have a suggestion
@@ -7,8 +9,6 @@
 *** Thanks again! Now go create something AMAZING! :D
 -->
 
-
-
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
@@ -17,8 +17,6 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-
-
 
 <!-- PROJECT LOGO -->
 <br />
@@ -38,8 +36,6 @@
     <a href="https://github.com/MFaqihRidho/animedb-website/issues">Request Feature</a>
   </p>
 </div>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -63,11 +59,12 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
+
 ### On Desktop
+
 [![image-2022-02-24-202414.png](https://i.postimg.cc/brHMvr2D/image-2022-02-24-202414.png)](https://postimg.cc/1VXMC9Bs)
 
 [![image-2022-02-24-202536.png](https://i.postimg.cc/mDW8FR4Q/image-2022-02-24-202536.png)](https://postimg.cc/1gMpLkft)
@@ -82,40 +79,34 @@
 
 [![mobile-2.png](https://i.postimg.cc/662CxFNK/mobile-2.png)](https://postimg.cc/kDC2x14Y)
 
-
 There are many great Anime on this website so you can find any Anime to
 watch the trailer,see the episode,see the reaview,see the stats etc
 
 Feature's:
-* Find your Anime with any genre
-* Find your Anime with any keyword
-* Play trailer or teaser on available Anime
-* See review,rating,stats,rank on Anime
-* Search Anime with the available Filter
+
+- Find your Anime with any genre
+- Find your Anime with any keyword
+- Play trailer or teaser on available Anime
+- See review,rating,stats,rank on Anime
+- Search Anime with the available Filter
 
 Of course, there are still many shortcomings, so just enjoy it!
 
-
-
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 ### Built With
 
 This Movie using react js as front end framework,Redux as state management,JIKAN API as Rest API,and tailwind as the style.
 
-* [React.js](https://reactjs.org/)
-* [React Redux](https://redux.js.org)
-* [JIKAN API](https://jikan.moe)
-* [Tailwindcss](https://tailwindcss.com)
-
+- [React.js](https://reactjs.org/)
+- [React Redux](https://redux.js.org)
+- [JIKAN API](https://jikan.moe)
+- [Tailwindcss](https://tailwindcss.com)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 This is an example of how you may give instructions on setting up your project locally.
@@ -124,7 +115,8 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
-* npm
+
+- npm
   ```sh
   npm install npm@latest -g
   ```
@@ -144,8 +136,8 @@ _Below is an example of how you can instruct your audience on installing and set
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -161,8 +153,8 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
 <!-- CONTACT -->
+
 ## Contact
 
 M.Faqih Ridho - [@mfaqihridho](https://www.instagram.com/mfaqihridho/) - mfaqihridhoo@gmail.com

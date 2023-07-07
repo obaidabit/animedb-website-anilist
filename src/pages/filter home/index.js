@@ -1,146 +1,96 @@
 import React, { useEffect, useState } from "react";
-import { getSearchAPI } from "../../config";
 import CardList from "../../components/card list";
-import Pagination from "../../components/pagination";
+import { getAnimeGenreAPI, getSearchAPI } from "../../config";
 import { useDispatch } from "react-redux";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import Pagination from "../../components/pagination";
 
-export default function Search() {
-  // Router
-  const params = useParams();
-  const navigate = useNavigate();
-
-  // Query String
-  let [searchParams] = useSearchParams();
-  const orderBy = searchParams.get("order_by");
-  const sortBy = searchParams.get("sort");
-  const typeBy = searchParams.get("type");
-  const statusBy = searchParams.get("status");
-  const ratingBy = searchParams.get("rating");
-
-  // State
+export default function Home() {
   const [data, setData] = useState([]);
-  const [nextPage, setNextPage] = useState(0);
-  const [order, setOrder] = useState(false);
+  const [genres, setGenres] = useState([]);
   const [sort, setSort] = useState("asc");
-  const [type, setType] = useState(false);
-  const [status, setStatus] = useState(false);
-  const [rating, setRating] = useState(false);
-  const [queryParams, setQueryParams] = useState([]);
-
-  // redux
+  const [orderBy, setOrderBy] = useState("");
+  const [genre, setGenre] = useState("");
+  const [animeType, setAnimeType] = useState("");
+  const [status, setStatus] = useState("");
+  const [rating, setRating] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [keywords, setKeywords] = useState("");
+  const [nextPage, setNextPage] = useState(0);
+  const [firstRender, setFirstRender] = useState(true);
+  const [startDate, setstartDate] = useState("");
+  const [endDate, setendDate] = useState("");
   const dispatch = useDispatch();
 
-  const baseUrl = `/search/${params.value}/page/${params.number}`;
-
-  const scrollTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
+  function submitSearch() {
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
     });
-  };
-
-  const handleChangeOrderBy = (e) => {
-    if (e.target.value !== "") {
-      setOrder(e.target.value);
-    } else {
-      setOrder(false);
-    }
-  };
-
-  const handleChangeSort = () => {
-    if (sort === "asc") {
-      setSort("desc");
-    } else {
-      setSort("asc");
-    }
-  };
-
-  const handleChangeType = (e) => {
-    if (e.target.value !== "") {
-      setType(e.target.value);
-    } else {
-      setType(false);
-    }
-  };
-
-  const handleChangeStatus = (e) => {
-    if (e.target.value !== "") {
-      setStatus(e.target.value);
-    } else {
-      setStatus(false);
-    }
-  };
-
-  const handleChangeRating = (e) => {
-    if (e.target.value !== "") {
-      setRating(e.target.value);
-    } else {
-      setRating(false);
-    }
-  };
-
-  const applyFilter = () => {
-    setQueryParams(
-      `?${order ? `&order_by=${order}` : ""}${sort ? `&sort=${sort}` : ""}${
-        type ? `&type=${type}` : ""
-      }${status ? `&status=${status}` : ""}${rating ? `&rating=${rating}` : ""}`
-    );
-    navigate(
-      `${baseUrl}?${order ? `&order_by=${order}` : ""}${
-        sort ? `&sort=${sort}` : ""
-      }${type ? `&type=${type}` : ""}${status ? `&status=${status}` : ""}${
-        rating ? `&rating=${rating}` : ""
-      }`
-    );
-    setOrder(false);
-    setType(false);
-    setSort(false);
-    setStatus(false);
-    setRating(false);
-  };
-
-  useEffect(() => {
-    let mounted = true;
-    scrollTop();
-    dispatch({ type: "LOADING_CARD_TRUE" });
     getSearchAPI(
-      params.value,
-      params.number,
+      keywords,
+      currentPage,
       orderBy,
-      sortBy,
-      typeBy,
-      statusBy,
-      ratingBy
+      sort,
+      animeType,
+      status,
+      rating,
+      genre,
+      startDate
+        ? formatter.format(new Date(startDate)).split("/").reverse().join("-")
+        : false,
+      endDate
+        ? formatter.format(new Date(endDate)).split("/").reverse().join("-")
+        : false
     ).then((result) => {
-      if (mounted) {
-        setNextPage(result.pagination.last_visible_page);
-        setData(result.data);
-        dispatch({ type: "LOADING_CARD_FALSE" });
-      } else {
-        return;
-      }
+      setNextPage(result.pagination.has_next_page);
+      setTotalPages(result.pagination.last_visible_page);
+      setData(result.data);
+      dispatch({ type: "LOADING_CARD_FALSE" });
     });
-    return () => (mounted = false);
-  }, [params, orderBy, ratingBy, sortBy, statusBy, typeBy, dispatch]);
+  }
+
+  function resetFilter() {
+    setOrderBy("");
+    setGenre("");
+    setAnimeType("");
+    setStatus("");
+    setRating("");
+    setKeywords("");
+    setSort("asc");
+    setCurrentPage(1);
+  }
 
   useEffect(() => {
-    scrollTop();
-  }, [params]);
+    getSearchAPI().then((result) => {
+      setNextPage(result.pagination.last_visible_page);
+      setTotalPages(result.pagination.last_visible_page);
+      setData(result.data);
+      dispatch({ type: "LOADING_CARD_FALSE" });
+    });
+    getAnimeGenreAPI().then((result) => setGenres(result.data));
+  }, []);
 
   useEffect(() => {
-    setOrder(false);
-    setType(false);
-    setSort(false);
-    setStatus(false);
-    setRating(false);
-  }, [params.value]);
+    if (!orderBy && !genre && !animeType && !status && !rating && !keywords) {
+      submitSearch();
+    }
+  }, [orderBy, genre, animeType, status, rating]);
+
+  useEffect(() => {
+    if (firstRender) {
+      setFirstRender(false);
+      return;
+    }
+    submitSearch();
+  }, [currentPage]);
 
   return (
-    <div className="flex flex-col gap-2 pt-10">
+    <div className="Home pt-5">
       <div className="container flex flex-col items-center justify-center gap-5 px-10 mx-auto md:px-5">
-        <div className="flex flex-col items-center gap-5 md:flex-row">
-          <div className="flex flex-row gap-5">
+        <div className="flex flex-col items-center gap-5 md:flex-row ">
+          <div className="flex flex-row gap-5 flex-wrap">
             <div className="relative inline-flex">
               <svg
                 className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none"
@@ -155,8 +105,10 @@ export default function Search() {
               </svg>
 
               <select
-                value={order}
-                onChange={(e) => handleChangeOrderBy(e)}
+                value={orderBy}
+                onChange={(e) =>
+                  e.target.value ? setOrderBy(e.target.value) : null
+                }
                 className="h-10 pl-5 pr-10 transition-all duration-300 outline-none appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary focus:outline-none active:outline-none"
               >
                 <option value={""}>Order By</option>
@@ -188,8 +140,38 @@ export default function Search() {
               </svg>
 
               <select
-                value={type}
-                onChange={(e) => handleChangeType(e)}
+                value={genre}
+                onChange={(e) =>
+                  e.target.value ? setGenre(e.target.value) : null
+                }
+                className="h-10 pl-5 pr-10 transition-all duration-300 outline-none appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary focus:outline-none active:outline-none"
+              >
+                <option value={""}>Genres</option>
+                {genres.map((genre) => (
+                  <option key={genre.mal_id} value={genre?.mal_id}>
+                    {genre.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="relative inline-flex">
+              <svg
+                className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 412 232"
+              >
+                <path
+                  d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z"
+                  fill="#648299"
+                  fillRule="nonzero"
+                />
+              </svg>
+
+              <select
+                value={animeType}
+                onChange={(e) =>
+                  e.target.value ? setAnimeType(e.target.value) : null
+                }
                 className="h-10 pl-5 pr-10 transition-all duration-300 outline-none appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary focus:outline-none active:outline-none"
               >
                 <option value={""}>Type</option>
@@ -218,7 +200,9 @@ export default function Search() {
 
               <select
                 value={status}
-                onChange={(e) => handleChangeStatus(e)}
+                onChange={(e) =>
+                  e.target.value ? setStatus(e.target.value) : null
+                }
                 className="h-10 pl-5 pr-10 transition-all duration-300 outline-none appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary focus:outline-none active:outline-none"
               >
                 <option value={""}>Status</option>
@@ -242,7 +226,9 @@ export default function Search() {
 
               <select
                 value={rating}
-                onChange={(e) => handleChangeRating(e)}
+                onChange={(e) =>
+                  e.target.value ? setRating(e.target.value) : null
+                }
                 className="h-10 pl-5 pr-10 transition-all duration-300 outline-none appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary focus:outline-none active:outline-none"
               >
                 <option value={""}>Rating</option>
@@ -253,6 +239,7 @@ export default function Search() {
               </select>
             </div>
           </div>
+
           <div className="relative inline-flex">
             {sort === "asc" ? (
               <svg
@@ -287,53 +274,96 @@ export default function Search() {
             )}
 
             <button
-              value={sort}
-              onClick={handleChangeSort}
+              onClick={() =>
+                setSort((prev) => (prev === "asc" ? "desc" : "asc"))
+              }
               className="h-10 pl-5 pr-10 transition-all duration-300 appearance-none rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
             >
               Sort
             </button>
           </div>
+          <div className="relative inline-flex">
+            <input
+              type="text"
+              placeholder="Search Anime"
+              value={keywords}
+              onChange={(e) => setKeywords(e.target.value)}
+              className="border-cyan-500 border w-full md:w-32 px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-full focus:outline-none transition-colors duration-300"
+            />
+          </div>
         </div>
-        <div>
+        <div className="gap-3 flex">
           <button
-            onClick={applyFilter}
+            onClick={submitSearch}
             className="px-5 py-2 text-lg transition-all duration-300 rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
           >
             Apply
           </button>
+
+          <button
+            onClick={resetFilter}
+            className="px-5 py-2 text-lg transition-all duration-300 rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
+          >
+            Reset
+          </button>
         </div>
-        <div className="flex flex-col gap-3 md:flex-row md:gap-5">
-          <p
-            className={`md:text-xl ${orderBy ? "block" : "hidden"}`}
-          >{`Order By: ${orderBy}`}</p>
-          <p
-            className={`md:text-xl ${typeBy ? "block" : "hidden"}`}
-          >{`Type: ${typeBy}`}</p>
-          <p
-            className={`md:text-xl ${statusBy ? "block" : "hidden"}`}
-          >{`Status: ${statusBy}`}</p>
-          <p
-            className={`md:text-xl ${ratingBy ? "block" : "hidden"}`}
-          >{`Rating: ${ratingBy}`}</p>
-          <p className={`md:text-xl ${sortBy ? "block" : "hidden"}`}>{`Sort: ${
-            sortBy === "asc" ? "ascending" : "descending"
-          }`}</p>
+
+        <div className="gap-5 flex justify-center align-center flex-wrap">
+          <div className="border-2 py-1 px-3 rounded-lg gap-3 border-cyan-500 flex">
+            <label htmlFor="start-date">Start Date:</label>
+            <input
+              type="date"
+              id="start-date"
+              value={startDate}
+              onChange={(e) => setstartDate(e.target.value)}
+            />
+          </div>
+          <div className="border-2 py-1 px-3 rounded-lg gap-3 border-cyan-500 flex">
+            <label htmlFor="end-date">End Date:</label>
+            <input
+              type="date"
+              id="end-date"
+              className="rounded border-1"
+              value={endDate}
+              onChange={(e) => setendDate(e.target.value)}
+            />
+          </div>
         </div>
       </div>
       <div className="flex flex-col justify-between min-h-screen">
         <CardList
           data={data}
           haveData={true}
-          title={`Result for ${params.value}`}
           all={true}
           firstCard={true}
         ></CardList>
-        <Pagination
-          title="search"
-          query={queryParams}
-          maxPage={nextPage}
-        ></Pagination>
+
+        <div className="flex justify-center gap-3 align-center">
+          <button
+            disabled={currentPage === 1 ? "disabled" : null}
+            onClick={() => {
+              setCurrentPage((prev) => (prev <= 0 ? 0 : prev - 1));
+            }}
+            className="py-2 px-4 disabled:bg-gray-300 text-white bg-blue-400 rounded-xl"
+          >
+            Prev
+          </button>
+          <input
+            className="text-center  rounded-lg"
+            type="text"
+            disabled
+            value={`${currentPage} / ${totalPages}`}
+          />
+          <button
+            disabled={nextPage ? null : "disabled"}
+            onClick={() => {
+              setCurrentPage((prev) => prev + 1);
+            }}
+            className="py-2 px-4 disabled:bg-gray-300  text-white bg-blue-400 rounded-xl"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

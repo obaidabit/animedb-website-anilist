@@ -23,7 +23,8 @@ export default function Home() {
   const endDateRef = useRef(null);
   const dispatch = useDispatch();
 
-  function submitSearch() {
+  function submitSearch(page) {
+    dispatch({ type: "LOADING_CARD_TRUE" });
     const formatter = new Intl.DateTimeFormat("en-US", {
       year: "numeric",
       month: "2-digit",
@@ -31,7 +32,7 @@ export default function Home() {
     });
     getSearchAPI(
       keywords,
-      currentPage,
+      page ? page : currentPage,
       orderBy,
       sort,
       animeType,
@@ -61,6 +62,8 @@ export default function Home() {
     setKeywords("");
     setSort("asc");
     setCurrentPage(1);
+    setstartDate("");
+    setendDate("");
   }
 
   useEffect(() => {
@@ -308,6 +311,9 @@ export default function Home() {
                 placeholder="Search Anime"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") submitSearch();
+                }}
                 className="border-cyan-500 border w-full px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-full focus:outline-none transition-colors duration-300"
               />
             </div>
@@ -351,7 +357,10 @@ export default function Home() {
         </div>
         <div className="gap-3 flex">
           <button
-            onClick={submitSearch}
+            onClick={() => {
+              setCurrentPage(1);
+              submitSearch(1);
+            }}
             className="px-5 py-2 text-lg transition-all duration-300 rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
           >
             Apply

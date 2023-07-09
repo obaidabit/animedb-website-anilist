@@ -51,12 +51,11 @@ export const getSearchAPI = (
       num ? `&page=${num}` : ""
     }&sfw${order_by ? `&order_by=${order_by}` : ""}${
       sort ? `&sort=${sort}` : ""
-    }${type ? `&type=${sort}` : ""}${status ? `&status=${status}` : ""}${
+    }${type ? `&type=${type}` : ""}${status ? `&status=${status}` : ""}${
       rating ? `&rating=${rating}` : ""
     }${genre ? `&genres=${genre}` : ""}${
       startDate ? `&start_date=${startDate}` : ""
-    }
-    ${endDate ? `&end_date=${endDate}` : ""}
+    }${endDate ? `&end_date=${endDate}` : ""}
     `
   )
     .then((res) => {

@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CardLoading from "../../card loading";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getFullDetailsAPI,
-  getPicturesAPI,
-  getRelationsAPI,
-} from "../../../config";
+import { getFullDetailsAPI, getRelationsAPI } from "../../../config";
 
 export default function Related() {
   const params = useParams();
@@ -14,110 +10,94 @@ export default function Related() {
   const loading = useSelector((state) => state.cardLoading);
   const [subRelated, setSutRelated] = useState([]);
   const dispatch = useDispatch();
-  const [images, setImages] = useState(new Map());
 
   async function viewRelated(anime, isMainRelation) {
-    if (anime.visited) {
-      if (isMainRelation)
-        setData((prev) => {
-          prev.forEach((related) => {
-            related.entry.forEach((ani) => {
-              if (anime.mal_id === ani.mal_id) {
-                ani.visited = !ani.visited;
-              }
-            });
-          });
-          return prev;
+    if (isMainRelation) {
+      setData((prev) => {
+        return prev.map((ani) => {
+          if (anime.mal_id === ani.mal_id) {
+            ani.visited = !ani.visited;
+          }
+          return ani;
         });
-      else
-        setSutRelated((prev) => {
-          prev.forEach((related) => {
-            related.data.forEach((sub) => {
-              sub.entry.forEach((ani) => {
-                if (anime.mal_id === ani.mal_id) {
-                  ani.visited = !ani.visited;
-                }
-              });
-            });
-          });
-          return prev;
-        });
-
-      deleteSubRelated(anime.mal_id);
-      return;
+      });
     } else {
-      if (isMainRelation)
-        setData((prev) => {
-          prev.forEach((related) => {
-            related.entry.forEach((ani) => {
-              if (anime.mal_id === ani.mal_id) {
-                ani.visited = !ani.visited;
-              }
-            });
+      setSutRelated((prev) => {
+        prev.forEach((related) => {
+          related.data.forEach((ani) => {
+            if (anime.mal_id === ani.mal_id) {
+              ani.visited = !ani.visited;
+            }
           });
-          return prev;
         });
-      else
-        setSutRelated((prev) => {
-          prev.forEach((related) => {
-            related.data.forEach((sub) => {
-              sub.entry.forEach((ani) => {
-                if (anime.mal_id === ani.mal_id) {
-                  ani.visited = !ani.visited;
-                }
-              });
-            });
-          });
-          return prev;
-        });
+        return prev;
+      });
     }
 
-    const fullAnimeDate = await getFullDetailsAPI(anime.mal_id);
+    getRelationsAPI(anime.mal_id).then(async (result) => {
+      if (!result) return;
+      let allFullValues = [];
+      for (let rel of result.data) {
+        if (rel.relation === "Adaptation") continue;
+        for (let i in rel.entry) {
+          const value = await new Promise((resolve, reject) => {
+            setTimeout(async () => {
+              try {
+                const result = await getFullDetailsAPI(rel.entry[i].mal_id);
+                resolve(result);
+              } catch (error) {
+                reject();
+              }
+            }, 500);
+          });
 
-    getRelationsAPI(anime.mal_id).then((result) => {
-      result.data.forEach((rel) =>
-        rel.entry.forEach((ani) => (ani.visited = false))
-      );
+          if (!value?.data) continue;
+          allFullValues.push({
+            ...value.data,
+            visited: false,
+            relation: rel.relation,
+          });
+        }
+      }
       setSutRelated((prev) => [
         ...prev,
-        { anime: fullAnimeDate.data, data: result.data },
+        {
+          anime: anime,
+          data: allFullValues.sort((a, b) =>
+            new Date(a.aired.from) > new Date(b.aired.from) ? 1 : -1
+          ),
+        },
       ]);
-      getImages(
-        result.data.flatMap((anime) => {
-          if (anime.relation === "Adaptation") return [];
-          else return anime.entry;
-        })
-      );
     });
   }
 
   function deleteSubRelated(id) {
     setSutRelated((prev) => prev.filter((rel) => rel.anime.mal_id !== id));
   }
-  function getImages(items) {
-    let count = 0;
 
-    const interval = setInterval(async () => {
-      for (let i = 0; i < 2; i++) {
-        if (count < items.length) {
-          const item = items[count];
-          if (images.get(item.mal_id)) {
-            count++;
-            continue;
+  function getAnimeFullDataTimeout(results) {
+    let counter = 0;
+    for (let rel of results.data) {
+      if (rel.relation === "Adaptation") continue;
+      for (let ent of rel.entry) {
+        setTimeout(async () => {
+          try {
+            const result = await getFullDetailsAPI(ent.mal_id);
+            if (result.data)
+              setData((prev) =>
+                [
+                  ...prev,
+                  { relation: rel.relation, ...result.data, visited: false },
+                ].sort((a, b) =>
+                  new Date(a.aired.from) > new Date(b.aired.from) ? 1 : -1
+                )
+              );
+          } catch (error) {
+            console.error(error);
           }
-          const image = await getPicturesAPI(item.mal_id);
-          if (image.data && image.data.length !== 0) {
-            const m = new Map();
-            m.set(item.mal_id, image);
-            setImages((prev) => new Map([...prev, ...m]));
-          }
-          count++;
-        } else {
-          clearInterval(interval);
-          break;
-        }
+        }, 1000 * counter++);
       }
-    }, 1500);
+    }
   }
 
   useEffect(() => {
@@ -125,18 +105,7 @@ export default function Related() {
     dispatch({ type: "LOADING_CARD_TRUE" });
     getRelationsAPI(params.id).then((result) => {
       if (mounted) {
-        setData(
-          result.data.map((related) => {
-            related.entry.forEach((anime) => (anime.visited = false));
-            return related;
-          })
-        );
-        getImages(
-          result.data.flatMap((anime) => {
-            if (anime.relation === "Adaptation") return [];
-            else return anime.entry;
-          })
-        );
+        getAnimeFullDataTimeout(result);
         dispatch({ type: "LOADING_CARD_FALSE" });
       } else {
         return;
@@ -152,49 +121,43 @@ export default function Related() {
       ) : (
         <div className="grid grid-flow-col auto-cols-max overflow-x-scroll gap-3 px-5 py-5 md:px-0 justify-items-center lg:gap-10 sm:gap-5 md:gap-7 card-list">
           {data?.length !== 0 ? (
-            data?.map((data) => {
-              if (data.relation === "Adaptation") return null;
-              return data?.entry.map((anime) => (
-                <div
-                  key={anime.mal_id}
-                  id={anime.mal_id}
-                  onClick={() => viewRelated(anime, true)}
-                  className="relative w-48 px-1 text-center py-1 overflow-hidden transition-all duration-200 lg:w-64 lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
-                  style={
-                    anime.visited
-                      ? {
-                          outline: "6px",
-                          outlineColor: "blue",
-                          outlineStyle: "solid",
-                        }
-                      : null
-                  }
-                  rel="noreferrer"
-                >
-                  {images ? (
-                    <img
-                      src={images.get(anime.mal_id)?.data[0].jpg.image_url}
-                      alt=""
-                      className="object-cover w-full h-80 md:h-80 lg:h-60 xl:h-80 rounded-xl"
-                    />
-                  ) : (
-                    <img
-                      alt=""
-                      className="object-cover w-full h-80 md:h-80 lg:h-60 xl:h-80 rounded-xl"
-                    />
-                  )}
-                  <a
-                    target="_blank"
-                    href={`/details/${anime.mal_id}`}
-                    className="text-center mx-auto overflow-hidden w-full text-ellipsis md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-black text-sm md:text-lg lg:text-xl font-semibold"
+            data?.map((rel) => {
+              if (rel.relation === "Adaptation") return null;
+              else
+                return (
+                  <div
+                    key={rel.mal_id}
+                    id={rel.mal_id}
+                    onClick={() => viewRelated(rel, true)}
+                    className="relative w-48 px-1 text-center py-1 overflow-hidden transition-all duration-200 lg:w-64 lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
+                    style={
+                      rel.visited
+                        ? {
+                            outline: "6px",
+                            outlineColor: "blue",
+                            outlineStyle: "solid",
+                          }
+                        : null
+                    }
                     rel="noreferrer"
                   >
-                    <span className="text-rose-500">{data?.relation}</span>
-                    <br />
-                    <span className="text-2xl">{anime.name}</span>
-                  </a>
-                </div>
-              ));
+                    <img
+                      src={rel?.images?.jpg.image_url}
+                      alt=""
+                      className="object-cover w-full h-80 md:h-80 lg:h-60 xl:h-80 rounded-xl"
+                    />
+                    <a
+                      target="_blank"
+                      href={`/details/${rel.mal_id}`}
+                      className="text-center mx-auto overflow-hidden w-full text-ellipsis md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-black text-sm md:text-lg lg:text-xl font-semibold"
+                      rel="noreferrer"
+                    >
+                      <span className="text-rose-500">{rel?.relation}</span>
+                      <br />
+                      <span className="text-2xl">{rel.title}</span>
+                    </a>
+                  </div>
+                );
             })
           ) : (
             <h1 className="text-3xl">Not Available</h1>
@@ -211,53 +174,48 @@ export default function Related() {
             </span>
           </h2>
           <div className="grid grid-flow-col auto-cols-max overflow-x-scroll gap-3 px-5 py-5 md:px-0 justify-items-center lg:gap-10 sm:gap-5 md:gap-7 card-list">
-            {related?.data.map((relation) => {
-              if (relation.relation === "Adaptation") return null;
-              else
-                return relation?.entry?.map((anime) => (
-                  <div
-                    key={anime.mal_id}
-                    onClick={() => viewRelated(anime, false)}
-                    id={anime.mal_id}
-                    style={
-                      anime.visited
-                        ? {
-                            outline: "6px",
-                            outlineColor: "blue",
-                            outlineStyle: "solid",
-                          }
-                        : null
-                    }
-                    className="relative w-48 px-1 text-center  py-1 overflow-hidden transition-all duration-200 lg:w-64 lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
-                    rel="noreferrer"
-                  >
-                    {images ? (
-                      <img
-                        src={images.get(anime.mal_id)?.data[0].jpg.image_url}
-                        alt=""
-                        className="object-cover w-full h-80 md:h-80 lg:h-60 xl:h-80 rounded-xl"
-                      />
-                    ) : (
-                      <img
-                        alt=""
-                        className="object-cover w-full h-80 md:h-80 lg:h-60 xl:h-80 rounded-xl"
-                      />
-                    )}
-                    <a
-                      target="_blank"
-                      href={`/details/${anime.mal_id}`}
-                      className="text-center mx-auto overflow-hidden w-full text-ellipsis md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-black text-sm md:text-lg lg:text-xl font-semibold"
+            {related?.data?.length !== 0 ? (
+              related?.data?.map((rel) => {
+                if (rel.relation === "Adaptation") return null;
+                else
+                  return (
+                    <div
+                      key={rel.mal_id}
+                      id={rel.mal_id}
+                      onClick={() => viewRelated(rel, false)}
+                      className="relative w-48 px-1 text-center py-1 overflow-hidden transition-all duration-200 lg:w-64 lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
+                      style={
+                        rel.visited
+                          ? {
+                              outline: "6px",
+                              outlineColor: "blue",
+                              outlineStyle: "solid",
+                            }
+                          : null
+                      }
                       rel="noreferrer"
                     >
-                      <span className="text-rose-500">
-                        {relation?.relation}
-                      </span>
-                      <br />
-                      <span className="text-2xl">{anime.name}</span>
-                    </a>
-                  </div>
-                ));
-            })}
+                      <img
+                        src={rel?.images?.jpg.image_url}
+                        alt=""
+                        className="object-cover w-full h-80 md:h-80 lg:h-60 xl:h-80 rounded-xl"
+                      />
+                      <a
+                        target="_blank"
+                        href={`/details/${rel.mal_id}`}
+                        className="text-center mx-auto overflow-hidden w-full text-ellipsis md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-black text-sm md:text-lg lg:text-xl font-semibold"
+                        rel="noreferrer"
+                      >
+                        <span className="text-rose-500">{rel?.relation}</span>
+                        <br />
+                        <span className="text-2xl">{rel.title}</span>
+                      </a>
+                    </div>
+                  );
+              })
+            ) : (
+              <h1 className="text-3xl">Not Available</h1>
+            )}
           </div>
 
           <h2 className="text-center text-3xl">

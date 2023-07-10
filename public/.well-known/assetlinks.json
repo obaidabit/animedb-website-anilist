@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.render.animedb",
+      "sha256_cert_fingerprints": [
+        "C3:40:72:3F:37:55:C7:0B:76:C6:E8:27:F8:AE:2C:63:E5:00:4A:3A:F6:09:80:98:1D:F4:E1:F1:48:D5:C2:EC"
+      ]
+    }
+  }
+]

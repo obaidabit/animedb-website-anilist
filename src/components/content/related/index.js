@@ -34,41 +34,42 @@ export default function Related() {
       });
     }
 
-    getRelationsAPI(anime.mal_id).then(async (result) => {
-      if (!result) return;
-      let allFullValues = [];
-      for (let rel of result.data) {
-        if (rel.relation === "Adaptation") continue;
-        for (let i in rel.entry) {
-          const value = await new Promise((resolve, reject) => {
-            setTimeout(async () => {
-              try {
-                const result = await getFullDetailsAPI(rel.entry[i].mal_id);
-                resolve(result);
-              } catch (error) {
-                reject();
-              }
-            }, 500);
-          });
+    if (!anime.visited)
+      getRelationsAPI(anime.mal_id).then(async (result) => {
+        if (!result) return;
+        let allFullValues = [];
+        for (let rel of result.data) {
+          if (rel.relation === "Adaptation") continue;
+          for (let i in rel.entry) {
+            const value = await new Promise((resolve, reject) => {
+              setTimeout(async () => {
+                try {
+                  const result = await getFullDetailsAPI(rel.entry[i].mal_id);
+                  resolve(result);
+                } catch (error) {
+                  reject();
+                }
+              }, 500);
+            });
 
-          if (!value?.data) continue;
-          allFullValues.push({
-            ...value.data,
-            visited: false,
-            relation: rel.relation,
-          });
+            if (!value?.data) continue;
+            allFullValues.push({
+              ...value.data,
+              visited: false,
+              relation: rel.relation,
+            });
+          }
         }
-      }
-      setSutRelated((prev) => [
-        ...prev,
-        {
-          anime: anime,
-          data: allFullValues.sort((a, b) =>
-            new Date(a.aired.from) > new Date(b.aired.from) ? 1 : -1
-          ),
-        },
-      ]);
-    });
+        setSutRelated((prev) => [
+          ...prev,
+          {
+            anime: anime,
+            data: allFullValues.sort((a, b) =>
+              new Date(a.aired.from) > new Date(b.aired.from) ? 1 : -1
+            ),
+          },
+        ]);
+      });
   }
 
   function deleteSubRelated(id) {
@@ -144,7 +145,7 @@ export default function Related() {
                     <img
                       src={rel?.images?.jpg.image_url}
                       alt=""
-                      className="object-cover w-full h-80 md:h-80 lg:h-60 xl:h-80 rounded-xl"
+                      className="object-cover w-full h-52 md:h-52 lg:h-60 xl:h-80 rounded-xl"
                     />
                     <a
                       target="_blank"
@@ -154,7 +155,7 @@ export default function Related() {
                     >
                       <span className="text-rose-500">{rel?.relation}</span>
                       <br />
-                      <span className="text-2xl">{rel.title}</span>
+                      <span className="text-xl">{rel.title}</span>
                     </a>
                   </div>
                 );
@@ -166,13 +167,20 @@ export default function Related() {
       )}
       {subRelated.map((related) => (
         <div key={Math.floor(Math.random() * 100000)}>
-          <h2 className="text-center text-3xl">
-            <span className="py-3 mt-2  rounded-xl bg-amber-300 text-white block">
-              {related.anime?.title}
-              <br />
-              {related.anime?.aired?.string}
-            </span>
-          </h2>
+          <div className="mt-2 flex rounded-xl bg-amber-300 text-white block">
+            <img
+              src={related?.anime?.images?.jpg.image_url}
+              alt=""
+              className="object-cover w-80 h-32 md:h-32 lg:h-32 xl:h-32 rounded-xl"
+            />
+            <h2 className="text-center w-full text-3xl flex items-center justify-center">
+              <span className="py-3">
+                {related.anime?.title}
+                <br />
+                {related.anime?.aired?.string}
+              </span>
+            </h2>
+          </div>
           <div className="grid grid-flow-col auto-cols-max overflow-x-scroll gap-3 px-5 py-5 md:px-0 justify-items-center lg:gap-10 sm:gap-5 md:gap-7 card-list">
             {related?.data?.length !== 0 ? (
               related?.data?.map((rel) => {
@@ -198,7 +206,7 @@ export default function Related() {
                       <img
                         src={rel?.images?.jpg.image_url}
                         alt=""
-                        className="object-cover w-full h-80 md:h-80 lg:h-60 xl:h-80 rounded-xl"
+                        className="object-cover w-full h-52 md:h-52 lg:h-60 xl:h-80 rounded-xl"
                       />
                       <a
                         target="_blank"
@@ -208,7 +216,7 @@ export default function Related() {
                       >
                         <span className="text-rose-500">{rel?.relation}</span>
                         <br />
-                        <span className="text-2xl">{rel.title}</span>
+                        <span className="text-xl">{rel.title}</span>
                       </a>
                     </div>
                   );

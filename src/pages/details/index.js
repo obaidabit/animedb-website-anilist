@@ -203,9 +203,12 @@ export default function Details() {
                       </h3>
                     </div>
                   </div>
-                  <p className="pt-3 md:pr-5 lg:max-w-full lg:min-h-[18rem] xl:min-h-[7rem] md:max-w-synopsis lg:pr-0 text-justify mx-auto self-center md:text-left text-md">
-                    {data?.synopsis}
-                  </p>
+                  <details>
+                    <summary>Story</summary>
+                    <p className="pt-3 md:pr-5 lg:max-w-full lg:min-h-[18rem] xl:min-h-[7rem] md:max-w-synopsis lg:pr-0 text-justify mx-auto self-center md:text-left text-md">
+                      {data?.synopsis}
+                    </p>
+                  </details>
                 </div>
               </div>
               <div className="flex flex-col items-center justify-between w-full gap-10 px-5 pb-10 xl:flex-row pt-7">
@@ -243,7 +246,7 @@ export default function Details() {
                       : "NA"}
                   </p>
                 </div>
-                <div className="flex-col items-start w-full border-2 border-gray-700 lg:flex dark:border-gray-200 justify-evenly rounded-xl">
+                <div className="flex lg:flex-col items-start w-full border-2 border-gray-700 lg:flex dark:border-gray-200 justify-evenly rounded-xl">
                   <div className="flex flex-col items-center justify-center w-full gap-4 p-5 text-md xl:text-sm xl:flex-row">
                     <p className="flex gap-1 font-bold">
                       Type :
@@ -272,7 +275,7 @@ export default function Details() {
                       </span>
                     </p>
                   </div>
-                  <div className="w-full  bg-gray-700 dark:bg-gray-200 h-[1px]"></div>
+                  <div className="w-full hidden lg:block bg-gray-700 dark:bg-gray-200 h-[1px]"></div>
                   <div className="flex flex-col items-center justify-center w-full gap-2 p-5 text-md xl:text-sm xl:flex-row">
                     <p className="flex gap-1 font-bold">
                       Status :

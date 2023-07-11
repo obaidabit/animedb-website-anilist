@@ -1,6 +1,7 @@
 {
   "short_name": "Animedb App",
   "name": "Create Animedb App",
+  "description": "Myanimelist alternative",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,8 +19,10 @@
       "sizes": "512x512"
     }
   ],
+  "iconUrl": "logo512.png",
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "theme_color": "#90E0EF",
   "background_color": "#ffffff"
 }

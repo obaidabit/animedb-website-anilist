@@ -1,7 +1,7 @@
 import React from "react";
 import CardLoading from "../card loading";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function CardList(props) {
@@ -15,9 +15,7 @@ export default function CardList(props) {
 
   const handleClickEvent = (event) => {
     event.preventDefault();
-    // navigate(`/details/${event.currentTarget.id}`, "_blank");
-    const newTab = window.open(`/details/${event.currentTarget.id}`, "_blank");
-    newTab.focus();
+    navigate(`/details/${event.currentTarget.id}`);
   };
 
   useEffect(() => {
@@ -105,7 +103,6 @@ export default function CardList(props) {
                   <div
                     key={data.mal_id}
                     id={data.mal_id}
-                    onClick={handleClickEvent}
                     className="relative w-full px-1 text-center py-1 dark:text-white overflow-hidden transition-all duration-200 lg:w-full lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:text-white lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
                     // className="relative w-full px-1 py-1 overflow-hidden transition-all duration-200 lg:w-full lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:bg-white lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
                   >
@@ -115,6 +112,8 @@ export default function CardList(props) {
                       </p>
                     ) : null}
                     <img
+                      id={data.mal_id}
+                      onClick={handleClickEvent}
                       src={data.images.webp.image_url}
                       alt=""
                       className="object-cover w-full h-32 md:h-80 lg:h-60 xl:h-80 rounded-xl"
@@ -122,7 +121,7 @@ export default function CardList(props) {
                     <p
                       className={`text-center mx-auto overflow-hidden max-w-superMini  md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-white text-sm md:text-lg lg:text-xl font-semibold`}
                     >
-                      {data.title}
+                      <Link to={`/details/${data.mal_id}`}>{data.title}</Link>
                     </p>
                     {props?.rank ? (
                       <p className="text-center lg:hidden">
@@ -135,10 +134,11 @@ export default function CardList(props) {
                   <div
                     key={data.mal_id}
                     id={data.mal_id}
-                    onClick={handleClickEvent}
                     className="relative w-full px-1 py-1 overflow-hidden transition-all duration-200 lg:w-full lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:bg-white lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
                   >
                     <img
+                      id={data.mal_id}
+                      onClick={handleClickEvent}
                       src={data.images.webp.image_url}
                       alt=""
                       className="object-cover w-full h-32 md:h-80 lg:h-60 xl:h-80 rounded-xl"
@@ -146,7 +146,7 @@ export default function CardList(props) {
                     <p
                       className={`text-center mx-auto overflow-hidden max-w-superMini  md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-black text-sm md:text-lg lg:text-xl font-semibold`}
                     >
-                      {data.title}
+                      <Link to={`/details/${data.mal_id}`}>{data.title}</Link>
                     </p>
                   </div>
                 ))}

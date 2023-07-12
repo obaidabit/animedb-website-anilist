@@ -76,6 +76,17 @@ export default function Related() {
     setSutRelated((prev) => prev.filter((rel) => rel.anime.mal_id !== id));
   }
 
+  function hideSection(related) {
+    setSutRelated((prev) => {
+      return prev.map((ani) => {
+        if (related.mal_id === ani.mal_id) {
+          ani.collapse = !ani.collapse;
+        }
+        return ani;
+      });
+    });
+  }
+
   function getAnimeFullDataTimeout(results) {
     let counter = 0;
     for (let rel of results.data) {
@@ -130,7 +141,7 @@ export default function Related() {
                     key={rel.mal_id}
                     id={rel.mal_id}
                     onClick={() => viewRelated(rel, true)}
-                    className="relative w-48 px-1 text-center py-1 overflow-hidden transition-all duration-200 lg:w-64 lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
+                    className="relative w-32 px-1 text-center py-1 overflow-hidden transition-all duration-200 lg:w-64 lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
                     style={
                       rel.visited
                         ? {
@@ -155,7 +166,9 @@ export default function Related() {
                     >
                       <span className="text-rose-500">{rel?.relation}</span>
                       <br />
-                      <span className="text-xl">{rel.title}</span>
+                      <span className="text-lg leading-3 md:leading-none">
+                        {rel.title}
+                      </span>
                     </a>
                   </div>
                 );
@@ -166,12 +179,13 @@ export default function Related() {
         </div>
       )}
       {subRelated.map((related) => (
-        <div key={Math.floor(Math.random() * 100000)}>
-          <div className="mt-2 flex rounded-xl bg-amber-300 text-white block">
+        <details open key={Math.floor(Math.random() * 100000)}>
+          <summary>{related.anime?.title}</summary>
+          <div className="mt-2 flex portrait:flex-col landscape:flex-row rounded-xl bg-amber-300 text-white block">
             <img
               src={related?.anime?.images?.jpg.image_url}
               alt=""
-              className="object-cover w-80 h-32 md:h-32 lg:h-32 xl:h-32 rounded-xl"
+              className="object-cover portrait:w-full w-80 h-32 md:h-32 lg:h-32 xl:h-32 rounded-xl"
             />
             <h2 className="text-center w-full text-3xl flex items-center justify-center">
               <span className="py-3">
@@ -191,7 +205,7 @@ export default function Related() {
                       key={rel.mal_id}
                       id={rel.mal_id}
                       onClick={() => viewRelated(rel, false)}
-                      className="relative w-48 px-1 text-center py-1 overflow-hidden transition-all duration-200 lg:w-64 lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
+                      className="relative w-32 px-1 text-center py-1 overflow-hidden transition-all duration-200 lg:w-64 lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
                       style={
                         rel.visited
                           ? {
@@ -216,7 +230,7 @@ export default function Related() {
                       >
                         <span className="text-rose-500">{rel?.relation}</span>
                         <br />
-                        <span className="text-xl">{rel.title}</span>
+                        <span className="text-lg">{rel.title}</span>
                       </a>
                     </div>
                   );
@@ -234,7 +248,7 @@ export default function Related() {
               Close
             </button>
           </h2>
-        </div>
+        </details>
       ))}
     </div>
   );

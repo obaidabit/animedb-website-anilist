@@ -99,7 +99,10 @@ export default function Details() {
                 <div className="md:flex -mt-44 md:-mt-40 md:flex-col md:items-center md:gap-10">
                   <img
                     className="relative h-96 md:h-full md:max-w-xs rounded-2xl "
-                    src={data?.images?.jpg?.image_url}
+                    src={
+                      data?.images?.jpg?.large_image_url ||
+                      data?.images?.jpg?.image_url
+                    }
                     alt=""
                   />
                   <div
@@ -246,7 +249,7 @@ export default function Details() {
                       : "NA"}
                   </p>
                 </div>
-                <div className="flex lg:flex-col items-start w-full border-2 border-gray-700 lg:flex dark:border-gray-200 justify-evenly rounded-xl">
+                <div className="flex portrait:flex-col lg:flex-col items-start w-full border-2 border-gray-700 lg:flex dark:border-gray-200 justify-evenly rounded-xl">
                   <div className="flex flex-col items-center justify-center w-full gap-4 p-5 text-md xl:text-sm xl:flex-row">
                     <p className="flex gap-1 font-bold">
                       Type :
@@ -275,7 +278,7 @@ export default function Details() {
                       </span>
                     </p>
                   </div>
-                  <div className="w-full hidden lg:block bg-gray-700 dark:bg-gray-200 h-[1px]"></div>
+                  <div className="w-full hidden portrait:block lg:block bg-gray-700 dark:bg-gray-200 h-[1px]"></div>
                   <div className="flex flex-col items-center justify-center w-full gap-2 p-5 text-md xl:text-sm xl:flex-row">
                     <p className="flex gap-1 font-bold">
                       Status :
@@ -318,7 +321,7 @@ export default function Details() {
               </div>
             </div>
           </div>
-          <div className="w-full px-5 py-10 min-h-fit">
+          <div className="w-full px-2 md:px-5 py-10 min-h-fit">
             <div className="flex flex-row justify-around w-full mx-auto md:justify-between">
               <button
                 onClick={() => switchContent(1)}

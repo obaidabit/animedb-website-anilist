@@ -22,7 +22,6 @@
   "iconUrl": "logo512.png",
   "start_url": ".",
   "display": "standalone",
-  "orientation": "portrait-primary",
   "theme_color": "#90E0EF",
   "background_color": "#ffffff"
 }

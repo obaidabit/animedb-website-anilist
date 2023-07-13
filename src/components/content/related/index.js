@@ -159,7 +159,6 @@ export default function Related() {
                       className="object-cover w-full h-52 md:h-52 lg:h-60 xl:h-80 rounded-xl"
                     />
                     <a
-                      target="_blank"
                       href={`/details/${rel.mal_id}`}
                       className="text-center mx-auto overflow-hidden w-full text-ellipsis md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-black text-sm md:text-lg lg:text-xl font-semibold"
                       rel="noreferrer"
@@ -223,7 +222,6 @@ export default function Related() {
                         className="object-cover w-full h-52 md:h-52 lg:h-60 xl:h-80 rounded-xl"
                       />
                       <a
-                        target="_blank"
                         href={`/details/${rel.mal_id}`}
                         className="text-center mx-auto overflow-hidden w-full text-ellipsis md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-black text-sm md:text-lg lg:text-xl font-semibold"
                         rel="noreferrer"

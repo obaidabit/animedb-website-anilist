@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { getFullDetailsAPI } from "../../config";
 import { useSelector, useDispatch } from "react-redux";
 import Videos from "../../components/content/videos";
@@ -11,10 +10,9 @@ import CharacterStaff from "../../components/content/character & staff";
 import MoreInfo from "../../components/content/more info";
 import DetailsLoading from "../../components/details loading";
 import MobileContentNav from "../../components/mobile/mobilenav content";
-import Related from "../../components/content/related";
+import Relation from "../../components/content/relation";
 
-export default function Details() {
-  const params = useParams();
+export default function Details({ animeId, setTabs, deleteTab, id }) {
   const [data, setData] = useState([]);
   const [content, setContent] = useState(0);
   const [contentNav, setContentNav] = useState(true);
@@ -61,23 +59,32 @@ export default function Details() {
     let mounted = true;
     scrollTop();
     dispatch({ type: "LOADING_DETAILS_TRUE" });
-    getFullDetailsAPI(params.id).then((result) => {
+    getFullDetailsAPI(animeId).then((result) => {
       if (mounted) {
         setData(result.data);
-        switchContent(1);
+        switchContent(8);
         dispatch({ type: "LOADING_DETAILS_FALSE" });
       } else {
         return;
       }
     });
     return () => (mounted = false);
-  }, [params.id, dispatch, switchContent]);
+  }, [animeId, dispatch, switchContent]);
+
   return (
     <div className="w-full min-h-screen text-gray-700 dark:text-gray-200">
       {loading && <DetailsLoading></DetailsLoading>}
       {!loading && (
         <div>
           <div>
+            <div className="text-right pr-4 absolute right-0 z-50">
+              <button
+                onClick={() => deleteTab({ id: id })}
+                className="py-1 mt-2 px-3 rounded-md bg-red-600 text-white mr-2"
+              >
+                Close
+              </button>
+            </div>
             <div className="absolute w-full transition-all duration-300 h-96 bg-light_primary dark:bg-dark_primary opacity-60 dark:opacity-80"></div>
             {data?.trailer?.images?.maximum_image_url ||
             data?.images?.jpg?.large_image_url ? (
@@ -413,7 +420,11 @@ export default function Details() {
               <div>{content === 5 && <Stats></Stats>}</div>
               <div>{content === 6 && <CharacterStaff></CharacterStaff>}</div>
               <div>{content === 7 && <MoreInfo></MoreInfo>}</div>
-              <div>{content === 8 && <Related></Related>}</div>
+              <div>
+                {content === 8 && (
+                  <Relation animeId={animeId} setTabs={setTabs}></Relation>
+                )}
+              </div>
               {isVisible && (
                 <button
                   onClick={scrollTop}

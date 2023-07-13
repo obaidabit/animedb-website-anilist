@@ -10,6 +10,7 @@ import { getTopAPI, getUpcomingAPI } from "./config";
 import PagesCard from "./pages/pages card list";
 import Schedule from "./pages/schedule";
 import Season from "./pages/season";
+import DetailsManager from "./components/content/detailsManager";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
         />
         <Route path="/schedule/:day/page/:number" element={<Schedule />} />
         <Route path="/season/page/:number/:year/:season" element={<Season />} />
-        <Route path="/details/:id" element={<Details />} />
+        <Route path="/details/:id" element={<DetailsManager />} />
         <Route path="/search/:value/page/:number" element={<Search />} />
         <Route path="/about" element={<About />} />
       </Routes>

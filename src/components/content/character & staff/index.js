@@ -35,18 +35,16 @@ export default function CharacterStaff({ animeId }) {
               character?.map((data) => (
                 <div
                   key={Math.floor(Math.random() * 1000000)}
-                  className="flex justify-between columns-4xl gap-20 overflow-hidden border-4 border-gray-700 lg:flex dark:border-gray-200 rounded-2xl"
+                  className="flex justify-between columns-4xl gap-20 overflow-hidden border border-gray-700 lg:flex dark:border-gray-200 rounded-2xl"
                 >
-                  <div className="flex flex-col self-start text-2xl">
+                  <div className="flex flex-col self-start text-sm md:text-2xl">
                     <img
                       className="h-40 landscape:h-52 w-64 object-cover "
                       src={data?.character?.images?.jpg?.image_url}
                       alt=""
                     />
                     <div className="py-3 text-center ">
-                      <p className="word-break break-all hyphens-auto">
-                        {data?.character.name}
-                      </p>
+                      <p>{data?.character.name}</p>
                     </div>
                   </div>
                 </div>

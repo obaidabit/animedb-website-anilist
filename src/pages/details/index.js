@@ -106,7 +106,7 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                 <div className="md:flex -mt-64 md:-mt-64 md:flex-col md:items-center md:gap-10">
                   <div className="flex items-center">
                     <img
-                      className="relative portrait:w-52 portrait:h-60 h-96 md:h-full md:max-w-xs rounded-2xl "
+                      className="relative portrait:w-52 portrait:h-64 h-96 md:h-full md:max-w-xs rounded-2xl "
                       src={
                         data?.images?.jpg?.large_image_url ||
                         data?.images?.jpg?.image_url
@@ -150,7 +150,7 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                   </div>
                 </div>
                 <div className="w-full px-7 md:-mt-8 ">
-                  <div className="relative flex flex-col gap-2 justify-between items-center w-full pt-5 lg:flex-row">
+                  <div className="relative flex flex-col gap-2 justify-between items-center w-full pt-2 lg:flex-row">
                     <h1 className="relative  text-2xl  font-bold text-center  md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
                       {data?.title}
                     </h1>

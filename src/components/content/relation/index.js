@@ -36,13 +36,6 @@ export default function Relation({ animeId, setTabs }) {
   }
 
   function showSubRelated(rel) {
-    // let newData = data.map((ent) => {
-    //   if (ent.mal_id === rel.mal_id) {
-    //     ent.visited = true;
-    //   }
-    //   return ent;
-    // });
-    // setData(newData);
     setTabs((prev) => [
       ...prev,
       { animeId: rel.mal_id, id: uuid(), visiable: false, anime: rel },
@@ -66,7 +59,7 @@ export default function Relation({ animeId, setTabs }) {
   if (loading) return <CardLoading />;
   return (
     <div className="pt-2 pb-5">
-      <div className="grid grid-flow-col auto-cols-max overflow-x-scroll gap-3 px-5 py-5 md:px-0 justify-items-center lg:gap-10 sm:gap-5 md:gap-7 card-list">
+      <div className="grid grid-flow-col auto-cols-max overflow-x-scroll gap-3 px-5 pt-5 pb-10 md:px-0 justify-items-center lg:gap-10 sm:gap-5 md:gap-7 card-list">
         {data?.length !== 0 ? (
           data?.map((rel) => {
             if (rel.relation === "Adaptation") return null;

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getRecommendationsAPI } from "../../../config";
 
-export default function Recommendation() {
+export default function Recommendation({ animeId }) {
   const params = useParams();
   const [data, setData] = useState([]);
   const loading = useSelector((state) => state.cardLoading);
@@ -20,7 +20,7 @@ export default function Recommendation() {
   useEffect(() => {
     let mounted = true;
     dispatch({ type: "LOADING_CARD_TRUE" });
-    getRecommendationsAPI(params.id).then((result) => {
+    getRecommendationsAPI(animeId).then((result) => {
       if (mounted) {
         setData(result.data);
         dispatch({ type: "LOADING_CARD_FALSE" });
@@ -29,7 +29,7 @@ export default function Recommendation() {
       }
     });
     return () => (mounted = false);
-  }, [params.id, dispatch]);
+  }, [animeId, dispatch]);
   return (
     <div className="pt-10 pb-5">
       {loading === true ? (

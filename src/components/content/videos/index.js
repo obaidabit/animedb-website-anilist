@@ -4,7 +4,7 @@ import { getVideosAPI } from "../../../config";
 import { useSelector, useDispatch } from "react-redux";
 import ContentLoading from "../../content loading";
 
-export default function Videos() {
+export default function Videos({ animeId }) {
   const params = useParams();
   const [data, setData] = useState([]);
   const loading = useSelector((state) => state.contentLoading);
@@ -13,7 +13,7 @@ export default function Videos() {
   useEffect(() => {
     let mounted = true;
     dispatch({ type: "LOADING_CONTENT_TRUE" });
-    getVideosAPI(params.id).then((result) => {
+    getVideosAPI(animeId).then((result) => {
       if (mounted) {
         setData(result.data);
         dispatch({ type: "LOADING_CONTENT_FALSE" });
@@ -22,7 +22,7 @@ export default function Videos() {
       }
     });
     return () => (mounted = false);
-  }, [params.id, dispatch]);
+  }, [animeId, dispatch]);
   return (
     <div className="flex flex-col gap-10 pt-10 pb-5">
       {loading ? (

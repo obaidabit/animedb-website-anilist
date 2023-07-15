@@ -4,7 +4,7 @@ import { getEpisodesAPI } from "../../../config";
 import { useSelector, useDispatch } from "react-redux";
 import ContentLoading from "../../content loading";
 
-export default function Episodes() {
+export default function Episodes({ animeId }) {
   const params = useParams();
   const [data, setData] = useState([]);
   const loading = useSelector((state) => state.contentLoading);
@@ -13,7 +13,7 @@ export default function Episodes() {
   useEffect(() => {
     let mounted = true;
     dispatch({ type: "LOADING_CONTENT_TRUE" });
-    getEpisodesAPI(params.id).then((result) => {
+    getEpisodesAPI(animeId).then((result) => {
       if (mounted) {
         setData(result.data);
         dispatch({ type: "LOADING_CONTENT_FALSE" });
@@ -22,7 +22,7 @@ export default function Episodes() {
       }
     });
     return () => (mounted = false);
-  }, [params.id, dispatch]);
+  }, [animeId, dispatch]);
   return (
     <div className="flex flex-col items-start w-full pt-10 gap-7 md:gap-5">
       {loading ? (

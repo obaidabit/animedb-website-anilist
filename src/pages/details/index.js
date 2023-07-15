@@ -85,11 +85,11 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                 Close
               </button>
             </div>
-            <div className="absolute w-full transition-all duration-300 h-96 bg-light_primary dark:bg-dark_primary opacity-60 dark:opacity-80"></div>
+            <div className="absolute w-full transition-all duration-300 h-80 bg-light_primary dark:bg-dark_primary opacity-60 dark:opacity-80"></div>
             {data?.trailer?.images?.maximum_image_url ||
             data?.images?.jpg?.large_image_url ? (
               <img
-                className="object-cover w-full h-96"
+                className="object-cover w-full h-80"
                 src={
                   data?.trailer?.images?.maximum_image_url ||
                   data?.images?.jpg?.large_image_url
@@ -103,15 +103,17 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
           <div className="w-full transition-all duration-300 h-fit bg-light_primary dark:bg-dark_primary">
             <div className="container flex flex-col mx-auto">
               <div className="flex flex-col items-center w-full px-5 md:items-start lg:items-center md:flex-row">
-                <div className="md:flex -mt-44 md:-mt-40 md:flex-col md:items-center md:gap-10">
-                  <img
-                    className="relative h-96 md:h-full md:max-w-xs rounded-2xl "
-                    src={
-                      data?.images?.jpg?.large_image_url ||
-                      data?.images?.jpg?.image_url
-                    }
-                    alt=""
-                  />
+                <div className="md:flex -mt-64 md:-mt-64 md:flex-col md:items-center md:gap-10">
+                  <div className="flex items-center">
+                    <img
+                      className="relative portrait:w-52 portrait:h-60 h-96 md:h-full md:max-w-xs rounded-2xl "
+                      src={
+                        data?.images?.jpg?.large_image_url ||
+                        data?.images?.jpg?.image_url
+                      }
+                      alt=""
+                    />
+                  </div>
                   <div
                     className={`flex-col items-center hidden w-2/3 px-2 py-2 transition-colors duration-300 ${
                       data?.score
@@ -147,22 +149,22 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                     </p>
                   </div>
                 </div>
-                <div className="w-full px-7 md:-mt-16 ">
-                  <div className="relative flex flex-col justify-between w-full pt-5 lg:flex-row">
-                    <h1 className="relative text-2xl mb-2 font-bold text-center md:whitespace-nowrap md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
+                <div className="w-full px-7 md:-mt-8 ">
+                  <div className="relative flex flex-col gap-2 justify-between items-center w-full pt-5 lg:flex-row">
+                    <h1 className="relative  text-2xl  font-bold text-center  md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
                       {data?.title}
                     </h1>
                     <button
-                      className="z-10 bg-amber-200 px-3 py-2 dark:text-black rounded"
+                      className="z-10 bg-amber-200 px-3 py-2 dark:text-black rounded whitespace-nowrap"
                       onClick={() => setResources((prev) => !prev)}
                     >
                       Show Resources
                     </button>
                     {resources ? (
-                      <div className="z-10 flex flex-col flex-wrap lg:flex-row md:absolute right-0 top-16">
+                      <div className="z-10 flex gap-1 mt-3 flex-col flex-wrap lg:flex-row md:absolute right-0 top-16">
                         <a
                           href={`https://anilist.co/anime/${data?.mal_id}/`}
-                          className="bg-blue-600 hover:bg-blue-500 mt-2 md:ml-1 md:mt-0 mb-2 md:mb-0 text-white font-bold py-2 px-4 rounded z-50"
+                          className="bg-blue-600 hover:bg-blue-500  text-white font-bold py-2 px-4 rounded z-50"
                           target="_blank"
                           rel="noreferrer"
                         >
@@ -172,7 +174,7 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                           <a
                             key={Math.floor(Math.random() * 1000)}
                             href={it?.url}
-                            className="bg-blue-600 mb-2 md:mb-0 md:ml-1 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded z-50"
+                            className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded z-50"
                             target="_blank"
                             rel="noreferrer"
                           >
@@ -413,13 +415,27 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
               ></MobileContentNav>
             </div>
             <div className=" flex flex-col mx-auto min-h-[500px]">
-              <div>{content === 1 && <Videos></Videos>}</div>
-              <div>{content === 2 && <Episodes></Episodes>}</div>
-              <div>{content === 3 && <Reviews></Reviews>}</div>
-              <div>{content === 4 && <Recommendation></Recommendation>}</div>
-              <div>{content === 5 && <Stats></Stats>}</div>
-              <div>{content === 6 && <CharacterStaff></CharacterStaff>}</div>
-              <div>{content === 7 && <MoreInfo></MoreInfo>}</div>
+              <div>{content === 1 && <Videos animeId={animeId}></Videos>}</div>
+              <div>
+                {content === 2 && <Episodes animeId={animeId}></Episodes>}
+              </div>
+              <div>
+                {content === 3 && <Reviews animeId={animeId}></Reviews>}
+              </div>
+              <div>
+                {content === 4 && (
+                  <Recommendation animeId={animeId}></Recommendation>
+                )}
+              </div>
+              <div>{content === 5 && <Stats animeId={animeId}></Stats>}</div>
+              <div>
+                {content === 6 && (
+                  <CharacterStaff animeId={animeId}></CharacterStaff>
+                )}
+              </div>
+              <div>
+                {content === 7 && <MoreInfo animeId={animeId}></MoreInfo>}
+              </div>
               <div>
                 {content === 8 && (
                   <Relation animeId={animeId} setTabs={setTabs}></Relation>

@@ -4,7 +4,7 @@ import { getCharactersAPI, getStaffAPI } from "../../../config";
 import { useSelector, useDispatch } from "react-redux";
 import ContentLoading from "../../content loading";
 
-export default function CharacterStaff() {
+export default function CharacterStaff({ animeId }) {
   const params = useParams();
   const [character, setCharacter] = useState([]);
   const loading = useSelector((state) => state.contentLoading);
@@ -13,7 +13,7 @@ export default function CharacterStaff() {
   useEffect(() => {
     let mounted = true;
     dispatch({ type: "LOADING_CONTENT_TRUE" });
-    getCharactersAPI(params.id).then((result) => {
+    getCharactersAPI(animeId).then((result) => {
       if (mounted) {
         setCharacter(result.data);
         dispatch({ type: "LOADING_CONTENT_FALSE" });
@@ -22,7 +22,7 @@ export default function CharacterStaff() {
       }
     });
     return () => (mounted = false);
-  }, [params.id, dispatch]);
+  }, [animeId, dispatch]);
   return (
     <div className="pt-10">
       {loading ? (
@@ -30,7 +30,7 @@ export default function CharacterStaff() {
       ) : (
         <>
           <h1 className="text-4xl font-bold text-center">Characters</h1>
-          <div className="grid grid-cols-2 gap-3 px-5 py-5 md:px-0 justify-items-center lg:grid-cols-5 lg:gap-10 sm:gap-5 md:grid-cols-3 md:gap-7 card-list">
+          <div className="grid grid-cols-3 gap-3 px-0 py-5 md:px-0 justify-items-center lg:grid-cols-5 lg:gap-10 sm:gap-5 md:grid-cols-3 md:gap-7 card-list">
             {character?.length !== 0 ? (
               character?.map((data) => (
                 <div
@@ -39,12 +39,14 @@ export default function CharacterStaff() {
                 >
                   <div className="flex flex-col self-start text-2xl">
                     <img
-                      className="h-full"
+                      className="h-40 landscape:h-52 w-64 object-cover "
                       src={data?.character?.images?.jpg?.image_url}
                       alt=""
                     />
-                    <div className="py-3 text-center">
-                      <p>{data?.character.name}</p>
+                    <div className="py-3 text-center ">
+                      <p className="word-break break-all hyphens-auto">
+                        {data?.character.name}
+                      </p>
                     </div>
                   </div>
                 </div>

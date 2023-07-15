@@ -72,11 +72,14 @@ export default function DetailsManager() {
         ))}
       </div> */}
       <Tabs>
-        <TabList id="tabs" className="overflow-x-auto flex w-full thin-scroll">
+        <TabList
+          id="tabs"
+          className="overflow-x-auto flex w-full thin-scroll py-2"
+        >
           {tabs.map((rel) => (
             <Tab
               key={rel.id}
-              className="whitespace-nowrap py-2 px-4 rounded-lg border-r border-r-gray-500"
+              className="whitespace-nowrap py-2 px-4 rounded-lg border-r-4 border-r-gray-500 cursor-pointer"
               selectedClassName="bg-amber-200 dark:text-black "
             >
               {rel?.anime?.title}

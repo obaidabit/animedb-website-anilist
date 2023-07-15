@@ -57,7 +57,7 @@ export default function MobileContentNav(props) {
         </svg>
       </button>
       {showDropDown ? (
-        <div className="absolute z-10 flex flex-col items-center px-3 py-4 mt-5 transition-all duration-300 rounded opacity-100 gap-7 right-14 left-14 bg-light_primary dark:bg-dark_primary">
+        <div className="absolute z-10 flex flex-col items-center px-3 py-4 mt-5 transition-all duration-300 rounded opacity-100 gap-2 right-14 left-14 bg-light_primary dark:bg-dark_primary">
           <p
             className="px-2 py-1 text-2xl font-normal rounded bg-light_secondary dark:bg-dark_secondary"
             onClick={() => {

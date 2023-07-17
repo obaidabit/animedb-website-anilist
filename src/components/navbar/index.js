@@ -74,7 +74,7 @@ export default function Navbar() {
         className="container flex justify-between px-5 mx-auto text-gray-700 dark:text-gray-200"
       >
         <div className="hidden md:block">
-          <h1 className="text-2xl font-bold ">Anime Finder</h1>
+          <h1 className="text-2xl font-bold m-0">Anime Info</h1>
         </div>
         <div onClick={toggleDropDown} className="cursor-pointer sm:hidden">
           <svg

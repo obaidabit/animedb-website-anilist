@@ -71,18 +71,50 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
     return () => (mounted = false);
   }, [animeId, dispatch, switchContent]);
 
+  function sortTabs() {
+    setTabs((prev) => {
+      const sorted = [...prev].sort((a, b) => {
+        const aDate = a.anime.aired.from
+          ? new Date(a.anime.aired.from)
+          : Infinity;
+        const bDate = b.anime.aired.from
+          ? new Date(b.anime.aired.from)
+          : Infinity;
+
+        if (aDate === Infinity && bDate === Infinity) {
+          return 0;
+        }
+        if (aDate === Infinity) {
+          return 1;
+        }
+        if (bDate === Infinity) {
+          return -1;
+        }
+
+        return aDate - bDate;
+      });
+
+      return sorted;
+    });
+  }
   return (
     <div className="w-full min-h-screen text-gray-700 dark:text-gray-200">
       {loading && <DetailsLoading></DetailsLoading>}
       {!loading && (
         <div>
           <div>
-            <div className="text-right pr-4 absolute right-0 z-50">
+            <div className="text-right pr-4 absolute w-full z-50">
               <button
                 onClick={() => deleteTab({ id: id })}
-                className="py-1 mt-2 px-3 rounded-md bg-red-600 text-white mr-2"
+                className="py-1 mt-2 px-3 rounded-md bg-red-600 text-white mr-2 absolute right-0"
               >
                 Close
+              </button>
+              <button
+                onClick={() => sortTabs({ id: id })}
+                className="py-1 mt-2 px-3 rounded-md bg-green-400 text-black ml-2 absolute left-0"
+              >
+                Sort
               </button>
             </div>
             <div className="absolute w-full transition-all duration-300 h-80 bg-light_primary dark:bg-dark_primary opacity-60 dark:opacity-80"></div>

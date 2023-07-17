@@ -24,7 +24,7 @@
   <a href="">
     <img width="130" src="https://i.postimg.cc/GtGRxbTd/logo.png"/>
   </a>
-  <h3 align="center">Anime Finder Website</h3>
+  <h3 align="center">Anime Info Website</h3>
 
   <p align="center">
     An awesome Anime Finder webiste ursing JIKAN API

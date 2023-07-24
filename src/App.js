@@ -11,12 +11,14 @@ import PagesCard from "./pages/pages card list";
 import Schedule from "./pages/schedule";
 import Season from "./pages/season";
 import DetailsManager from "./components/content/detailsManager";
+import Anilist from "./pages/anilist";
 
 function App() {
   return (
     <div className="text-gray-700 app font-Lato dark:text-gray-200">
       <Navbar></Navbar>
       <Routes>
+        <Route path="/anilist" element={<Anilist />} />
         <Route path="/" element={<Home />} />
         <Route path="/Anime" element={<Anime />} />
         <Route

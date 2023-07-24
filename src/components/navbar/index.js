@@ -99,8 +99,8 @@ export default function Navbar() {
           <Link className="text-xl font-medium " to="anime">
             Anime
           </Link>
-          <Link className="text-xl font-medium " to="about">
-            About
+          <Link className="text-xl font-medium " to="anilist">
+            Anilist
           </Link>
         </div>
         <div className="flex items-center h-9 w-1/2 md:w-1/4 bg-white dark:bg-gray-500 rounded-lg transition-all duration-300">

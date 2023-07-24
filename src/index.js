@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "./global.css";
 import App from "./App";
@@ -81,13 +81,12 @@ const rootReducer = (state = initialState, action) => {
 
 const store = createStore(rootReducer);
 
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Provider store={store}>
       <App />
     </Provider>
-  </BrowserRouter>,
-  document.getElementById("root")
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

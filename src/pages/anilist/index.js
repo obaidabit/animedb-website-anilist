@@ -3,6 +3,7 @@ import CardList from "../../components/card list";
 import { useDispatch } from "react-redux";
 import { getFullAnilistDetailsAPI, getSearchAPI } from "../../config/anilist";
 import { uuid } from "../../config";
+import CardListAnilist from "../../components/card list anilist";
 
 export default function Anilist() {
   const [data, setData] = useState([]);
@@ -45,6 +46,7 @@ export default function Anilist() {
   const dispatch = useDispatch();
 
   function submitSearch() {
+    dispatch({ type: "LOADING_CARD_TRUE" });
     getSearchAPI(
       keywords,
       format,
@@ -61,7 +63,8 @@ export default function Anilist() {
       durationMin,
       durationMax
     ).then((res) => {
-      setData(res);
+      setData(res.media);
+      dispatch({ type: "LOADING_CARD_FALSE" });
       console.log(res);
     });
   }
@@ -78,7 +81,7 @@ export default function Anilist() {
       <div className="container flex flex-col items-center justify-center gap-5 px-5 mx-auto md:px-5">
         <div className="flex flex-col items-center gap-5 md:flex-row ">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-5 items-center">
-            <div className="relative flex items-center border shadow-lg pl-3 rounded-md col-span-full md:col-span-1">
+            <div className="relative dark:bg-gray-500 flex items-center border-cyan-500 border shadow-lg pl-3 rounded-md col-span-full md:col-span-1 transition-all duration-300">
               <label htmlFor="anilist-search">
                 <svg
                   className="w-5 h-5"
@@ -102,13 +105,16 @@ export default function Anilist() {
                 placeholder="Anime"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
-                className="w-full h-9 px-2 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 focus:outline-none transition-colors duration-300"
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") submitSearch();
+                }}
+                className="w-full h-9 px-2 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 focus:outline-none transition-colors transition-all border-0 rounded-md duration-300"
               />
             </div>
-            <div className="relative flex items-center border shadow-lg px-4 rounded-md">
+            <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
               <select
                 onChange={(e) => setSelectedGenre(e.target.value)}
-                className="h-9 w-full transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
+                className="h-9 w-full transition-all duration-300 focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
               >
                 <option value={""}>Genres</option>
                 {genres.map((genre) => (
@@ -118,8 +124,8 @@ export default function Anilist() {
                 ))}
               </select>
             </div>
-            <div className="relative flex items-center border shadow-lg px-4 rounded-md">
-              <select className="h-9 w-full transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none">
+            <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
+              <select className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none">
                 <option value={""}>Year</option>
                 {Array.from(
                   { length: new Date().getFullYear() - 1941 },
@@ -131,8 +137,8 @@ export default function Anilist() {
                 ))}
               </select>
             </div>
-            <div className="relative flex items-center border shadow-lg px-4 rounded-md">
-              <select className="h-9 w-full transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none">
+            <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
+              <select className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none">
                 <option value={""}>Sort</option>
                 <option value={"TITLE_ROMAJI"}>Title</option>
                 <option value={"POPULARITY"}>Popularity</option>
@@ -182,10 +188,10 @@ export default function Anilist() {
                 )}
               </button>
             </div>
-            <div className="relative flex items-center border shadow-lg px-4 rounded-md">
+            <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
               <select
                 onChange={(e) => setFormat(e.target.value)}
-                className="h-9 w-full transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
+                className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
               >
                 <option value={""}>Format</option>
                 <option value={"tv show"}>TV Show</option>
@@ -197,10 +203,10 @@ export default function Anilist() {
                 <option value={"music"}>Music</option>
               </select>
             </div>
-            <div className="relative flex items-center border shadow-lg px-4 rounded-md">
+            <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
               <select
                 onChange={(e) => setSource(e.target.value)}
-                className="h-9 w-full transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
+                className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
               >
                 <option value={""}>Source</option>
                 <option className="capitalize" value={"ORIGINAL"}>
@@ -250,10 +256,10 @@ export default function Anilist() {
                 </option>
               </select>
             </div>
-            <div className="relative flex items-center border shadow-lg px-4 rounded-md">
+            <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
               <select
                 onChange={(e) => setYear(e.target.value)}
-                className="h-9 w-full transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
+                className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
               >
                 <option value={""}>Season</option>
                 <option value={"winter"}>Winter</option>
@@ -265,13 +271,13 @@ export default function Anilist() {
             <div
               className={
                 hideFilters
-                  ? "hidden md:flex relative items-center border shadow-lg px-4 rounded-md"
-                  : "relative flex items-center border shadow-lg px-4 rounded-md"
+                  ? "hidden md:flex relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary items-center border shadow-lg px-4 rounded-md transition-all duration-300"
+                  : "relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300"
               }
             >
               <select
                 onChange={(e) => setStatus(e.target.value)}
-                className="h-9 w-full transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
+                className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
               >
                 <option value={""}>Airing Status</option>
                 <option value={"airing"}>Airing</option>
@@ -283,8 +289,8 @@ export default function Anilist() {
             <div
               className={
                 hideFilters
-                  ? "hidden md:flex relative items-center border shadow-lg px-4 rounded-md"
-                  : "relative flex items-center border shadow-lg px-4 rounded-md"
+                  ? "hidden md:flex rounded-md relative items-center shadow-lg"
+                  : "relative flex items-center rounded-md shadow-lg "
               }
             >
               <input
@@ -295,14 +301,14 @@ export default function Anilist() {
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 placeholder="Start Date"
-                className="w-full h-9  py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 focus:outline-none transition-colors duration-300"
+                className="border-cyan-500 border w-full px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-md focus:outline-none transition-colors duration-300"
               />
             </div>
             <div
               className={
                 hideFilters
-                  ? "hidden md:flex relative items-center border shadow-lg px-4 rounded-md"
-                  : "relative flex items-center border shadow-lg px-4 rounded-md"
+                  ? "hidden md:flex rounded-md relative items-center shadow-lg"
+                  : "relative flex items-center rounded-md shadow-lg "
               }
             >
               <input
@@ -313,14 +319,14 @@ export default function Anilist() {
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 placeholder="End Date"
-                className="w-full h-9  py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 focus:outline-none transition-colors duration-300"
+                className="border-cyan-500 border w-full px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-md focus:outline-none transition-colors duration-300"
               />
             </div>
             <div
               className={
                 hideFilters
-                  ? "hidden md:flex relative items-center border shadow-lg px-4 rounded-md"
-                  : "relative flex items-center border shadow-lg px-4 rounded-md"
+                  ? "hidden md:flex rounded-md relative items-center shadow-lg"
+                  : "relative flex items-center rounded-md shadow-lg "
               }
             >
               <input
@@ -330,14 +336,14 @@ export default function Anilist() {
                 value={episodeMin}
                 onChange={(e) => setEpisodeMin(e.target.value)}
                 placeholder="Episode Min"
-                className="w-full h-9  py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 focus:outline-none transition-colors duration-300"
+                className="border-cyan-500 border w-full px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-md focus:outline-none transition-colors duration-300"
               />
             </div>
             <div
               className={
                 hideFilters
-                  ? "hidden md:flex relative items-center border shadow-lg px-4 rounded-md"
-                  : "relative flex items-center border shadow-lg px-4 rounded-md"
+                  ? "hidden md:flex rounded-md relative items-center shadow-lg"
+                  : "relative flex items-center rounded-md shadow-lg "
               }
             >
               <input
@@ -347,14 +353,14 @@ export default function Anilist() {
                 value={episodeMax}
                 onChange={(e) => setEpisodeMax(e.target.value)}
                 placeholder="Episode Max"
-                className="w-full h-9  py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 focus:outline-none transition-colors duration-300"
+                className="border-cyan-500 border w-full px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-md focus:outline-none transition-colors duration-300"
               />
             </div>
             <div
               className={
                 hideFilters
-                  ? "hidden md:flex relative items-center border shadow-lg px-4 rounded-md"
-                  : "relative flex items-center border shadow-lg px-4 rounded-md"
+                  ? "hidden md:flex rounded-md relative items-center shadow-lg"
+                  : "relative flex items-center rounded-md shadow-lg "
               }
             >
               <input
@@ -363,14 +369,14 @@ export default function Anilist() {
                 value={durationMin}
                 onChange={(e) => setDurationMin(e.target.value)}
                 placeholder="Duration Min"
-                className="w-full h-9  py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 focus:outline-none transition-colors duration-300"
+                className="border-cyan-500 border w-full px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-md focus:outline-none transition-colors duration-300"
               />
             </div>
             <div
               className={
                 hideFilters
-                  ? "hidden md:flex relative items-center border shadow-lg px-4 rounded-md"
-                  : "relative flex items-center border shadow-lg px-4 rounded-md"
+                  ? "hidden md:flex rounded-md relative items-center shadow-lg"
+                  : "relative flex items-center rounded-md shadow-lg "
               }
             >
               <input
@@ -379,7 +385,7 @@ export default function Anilist() {
                 value={durationMax}
                 onChange={(e) => setDurationMax(e.target.value)}
                 placeholder="Duration Max"
-                className="w-full h-9  py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 focus:outline-none transition-colors duration-300"
+                className="border-cyan-500 border w-full px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-md focus:outline-none transition-colors duration-300"
               />
             </div>
             <div className="flex justify-between items-center col-span-full md:col-span-1">
@@ -405,12 +411,12 @@ export default function Anilist() {
       </div>
       <div className="flex flex-col justify-between min-h-screen">
         {data.length ? (
-          <CardList
+          <CardListAnilist
             data={data}
             haveData={true}
             all={true}
             firstCard={true}
-          ></CardList>
+          ></CardListAnilist>
         ) : null}
       </div>
     </div>

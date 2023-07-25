@@ -1,11 +1,20 @@
-import { anilist, PageInfo } from "anilist";
+import { anilist } from "anilist";
 
 function getFullInfo(filter) {
   return anilist
-    .pageQuery()
+    .pageQuery({ perPage: 30 })
+    .withPageInfo((pageInfo) =>
+      pageInfo
+        .withTotal()
+        .hasNextPage()
+        .withCurrentPage()
+        .withLastPage()
+        .withPerPage()
+    )
 
     .withMedia((media) =>
       media
+        .arguments(filter)
         .withTitles()
         .withDescription()
         .withCoverImage()
@@ -73,6 +82,5 @@ export const getSearchAPI = (
   if (duration_lesser) args.duration_lesser = duration_lesser;
   if (genre) args.genre = genre;
 
-  console.log("calling anilist");
   return getFullInfo(args);
 };

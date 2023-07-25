@@ -308,7 +308,7 @@ export default function Home() {
               placeholder="Search Anime"
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
-              onKeyPress={(e) => {
+              onKeyUp={(e) => {
                 if (e.key === "Enter") submitSearch();
               }}
               className="border-cyan-500 border w-full px-4 py-1 dark:text-gray-200 text-gray-800 dark:bg-gray-500 rounded-full focus:outline-none transition-colors duration-300"

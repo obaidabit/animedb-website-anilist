@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CardList from "../../components/card list";
 import { useDispatch } from "react-redux";
 import { getFullAnilistDetailsAPI, getSearchAPI } from "../../config/anilist";
+import { FuzzyDate } from "anilist";
 import { uuid } from "../../config";
 import CardListAnilist from "../../components/card list anilist";
 
@@ -30,7 +31,7 @@ export default function Anilist() {
     "sports",
   ]);
   const [selectedGenre, setSelectedGenre] = useState("");
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState();
   const [season, setSeason] = useState("");
   const [format, setFormat] = useState("");
   const [status, setStatus] = useState("");
@@ -43,6 +44,10 @@ export default function Anilist() {
   const [durationMax, setDurationMax] = useState("");
   const [hideFilters, setHideFilters] = useState(true);
   const [sort, setSort] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [nextPage, setNextPage] = useState(false);
+
   const dispatch = useDispatch();
 
   function submitSearch() {
@@ -50,36 +55,62 @@ export default function Anilist() {
     getSearchAPI(
       keywords,
       format,
-      null,
+      sort ? [sort] : null,
       status,
       source,
       selectedGenre,
-      year,
-      endDate,
-      startDate,
-      season,
-      episodeMin,
-      episodeMax,
-      durationMin,
-      durationMax
+      year ? year + "%" : "",
+      parseInt(endDate),
+      parseInt(startDate),
+      parseInt(season),
+      parseInt(episodeMin),
+      parseInt(episodeMax),
+      parseInt(durationMin),
+      parseInt(durationMax),
+      currentPage
     ).then((res) => {
       setData(res.media);
+      setNextPage(res.pageInfo.hasNextPage);
+      setTotalPages(res.pageInfo.lastPage);
+      setCurrentPage(res.pageInfo.currentPage);
       dispatch({ type: "LOADING_CARD_FALSE" });
+      setFirstRender(false);
       console.log(res);
     });
   }
+  function resetSearch() {
+    setKeywords("");
+    setSeason("");
+    setFormat("");
+    setStatus("");
+    setSource("");
+    setSelectedGenre("");
+    setYear("");
+    setEndDate("");
+    setStartDate("");
+    setEpisodeMin("");
+    setEpisodeMax("");
+    setEpisodeMax("");
+    setDurationMin("");
+    setDurationMax("");
+    setSort("");
+    setCurrentPage(1);
+  }
   useEffect(() => {
-    // if (firstRender) {
-    //   setFirstRender(false);
-    //   return;
-    // }
     submitSearch();
   }, []);
+
+  useEffect(() => {
+    if (firstRender) {
+      return;
+    }
+    submitSearch();
+  }, [currentPage]);
 
   return (
     <div className="Home pt-5">
       <div className="container flex flex-col items-center justify-center gap-5 px-5 mx-auto md:px-5">
-        <div className="flex flex-col items-center gap-5 md:flex-row ">
+        <div className="flex flex-col items-center gap-5 md:flex-row mb-2">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-5 items-center">
             <div className="relative dark:bg-gray-500 flex items-center border-cyan-500 border shadow-lg pl-3 rounded-md col-span-full md:col-span-1 transition-all duration-300">
               <label htmlFor="anilist-search">
@@ -113,6 +144,7 @@ export default function Anilist() {
             </div>
             <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
               <select
+                value={selectedGenre}
                 onChange={(e) => setSelectedGenre(e.target.value)}
                 className="h-9 w-full transition-all duration-300 focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
               >
@@ -125,28 +157,36 @@ export default function Anilist() {
               </select>
             </div>
             <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
-              <select className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none">
+              <select
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
+              >
                 <option value={""}>Year</option>
                 {Array.from(
                   { length: new Date().getFullYear() - 1941 },
                   (_, index) => new Date().getFullYear() - index
                 ).map((year) => (
-                  <option key={uuid()} value={""}>
+                  <option key={uuid()} value={year}>
                     {year}
                   </option>
                 ))}
               </select>
             </div>
             <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
-              <select className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none">
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
+              >
                 <option value={""}>Sort</option>
                 <option value={"TITLE_ROMAJI"}>Title</option>
-                <option value={"POPULARITY"}>Popularity</option>
-                <option value={"SCORE"}>Score</option>
-                <option value={"TRENDING"}>Trending</option>
-                <option value={"FAVOURITES"}>Favorites</option>
-                <option value={"ID"}>Date</option>
-                <option value={"START_DATE"}>Release Date</option>
+                <option value={"POPULARITY_DESC"}>Popularity</option>
+                <option value={"SCORE_DESC"}>Score</option>
+                <option value={"TRENDING_DESC"}>Trending</option>
+                <option value={"FAVOURITES_DESC"}>Favorites</option>
+                <option value={"ID_DESC"}>Date</option>
+                <option value={"START_DATE_DESC"}>Release Date</option>
               </select>
 
               <button
@@ -154,57 +194,28 @@ export default function Anilist() {
                 onClick={() =>
                   setSort((prev) => (prev === "asc" ? "desc" : "asc"))
                 }
-              >
-                {sort === "asc" ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6 absolute top-0 right-0 mx-4 my-2 pointer-events-none"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M7 11l5-5m0 0l5 5m-5-5v12"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6 absolute top-0 right-0 mx-4 my-2 pointer-events-none"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 13l-5 5m0 0l-5-5m5 5V6"
-                    />
-                  </svg>
-                )}
-              </button>
+              ></button>
             </div>
             <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
               <select
+                value={format}
                 onChange={(e) => setFormat(e.target.value)}
                 className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
               >
                 <option value={""}>Format</option>
-                <option value={"tv show"}>TV Show</option>
-                <option value={"movie"}>Movie</option>
-                <option value={"tv short"}>TV Short</option>
-                <option value={"special"}>Special</option>
-                <option value={"ova"}>OVA</option>
-                <option value={"ona"}>ONA</option>
-                <option value={"music"}>Music</option>
+                <option value={"TV"}>TV Show</option>
+                <option value={"MOVIE"}>Movie</option>
+                <option value={"TV_SHORT"}>TV Short</option>
+                <option value={"SPECIAL"}>Special</option>
+                <option value={"OVA"}>OVA</option>
+                <option value={"ONA"}>ONA</option>
+                <option value={"MUSIC"}>Music</option>
+                <option value={"ONE_SHOT"}>One Shot</option>
               </select>
             </div>
             <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
               <select
+                value={source}
                 onChange={(e) => setSource(e.target.value)}
                 className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
               >
@@ -258,32 +269,36 @@ export default function Anilist() {
             </div>
             <div className="relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300">
               <select
-                onChange={(e) => setYear(e.target.value)}
+                value={season}
+                onChange={(e) => setSeason(e.target.value)}
                 className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
               >
                 <option value={""}>Season</option>
-                <option value={"winter"}>Winter</option>
-                <option value={"spring"}>Spring</option>
-                <option value={"summer"}>Summer</option>
-                <option value={"fall"}>Fall</option>
+                <option value={"WINTER"}>Winter</option>
+                <option value={"SPRING"}>Spring</option>
+                <option value={"SUMMER"}>Summer</option>
+                <option value={"FALL"}>Fall</option>
               </select>
             </div>
+
             <div
               className={
                 hideFilters
-                  ? "hidden md:flex relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary items-center border shadow-lg px-4 rounded-md transition-all duration-300"
-                  : "relative focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300"
+                  ? "hidden md:flex relative col-span-full md:col-span-1 focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary items-center border shadow-lg px-4 rounded-md transition-all duration-300"
+                  : "relative focus:ring-4  col-span-full md:col-span-1 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary flex items-center border shadow-lg px-4 rounded-md transition-all duration-300"
               }
             >
               <select
+                value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="h-9 w-full focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
+                className="h-9 w-full focus:ring-4 text-center md:text-left focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary transition-all duration-300  outline-none appearance-none focus:ring-0 focus:ring-0 focus:dark:ring-0 focus:outline-none active:outline-none"
               >
                 <option value={""}>Airing Status</option>
-                <option value={"airing"}>Airing</option>
-                <option value={"finished"}>Finished</option>
-                <option value={"not yet aired"}>Not Yet Aired</option>
-                <option value={"cancelled"}>Cancelled</option>
+                <option value={"RELEASING"}>Airing</option>
+                <option value={"FINISHED"}>Finished</option>
+                <option value={"NOT_YET_RELEASED"}>Not Yet Aired</option>
+                <option value={"CANCELLED"}>Cancelled</option>
+                <option value={"HIATUS"}>Paused</option>
               </select>
             </div>
             <div
@@ -401,13 +416,15 @@ export default function Anilist() {
               >
                 Show
               </button>
-              <button className="px-5 py-2 transition-all duration-300 rounded-md focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary">
+              <button
+                onClick={() => resetSearch()}
+                className="px-5 py-2 transition-all duration-300 rounded-md focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
+              >
                 Reset
               </button>
             </div>
           </div>
         </div>
-        <div className="gap-5 flex justify-center items-center flex-wrap"></div>
       </div>
       <div className="flex flex-col justify-between min-h-screen">
         {data.length ? (
@@ -418,6 +435,32 @@ export default function Anilist() {
             firstCard={true}
           ></CardListAnilist>
         ) : null}
+      </div>
+      <div className="flex justify-center gap-3 align-center">
+        <button
+          disabled={currentPage === 1 ? "disabled" : null}
+          onClick={() => {
+            setCurrentPage((prev) => (prev <= 0 ? 0 : prev - 1));
+          }}
+          className="disabled:bg-gray-300 disabled:dark:bg-gray-700 px-5 py-2 text-lg transition-all duration-300 rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
+        >
+          Prev
+        </button>
+        <input
+          className="text-center  rounded-lg"
+          type="text"
+          disabled
+          value={`${currentPage} `}
+        />
+        <button
+          disabled={nextPage ? null : "disabled"}
+          onClick={() => {
+            setCurrentPage((prev) => prev + 1);
+          }}
+          className="px-5 py-2 text-lg disabled:bg-gray-300 disabled:dark:bg-gray-700 transition-all duration-300 rounded-xl focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

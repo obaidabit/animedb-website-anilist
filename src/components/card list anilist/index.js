@@ -114,7 +114,7 @@ export default function CardListAnilist(props) {
                     <img
                       id={data.idMal}
                       onClick={handleClickEvent}
-                      src={data.coverImage.medium}
+                      src={data.coverImage.large}
                       alt=""
                       className="object-cover w-full h-32 md:h-80 lg:h-60 xl:h-80 rounded-xl"
                     />
@@ -141,7 +141,7 @@ export default function CardListAnilist(props) {
                     <img
                       id={data.mal_id}
                       onClick={handleClickEvent}
-                      src={data.coverImage.medium}
+                      src={data.coverImage.large}
                       alt=""
                       className="object-cover w-full h-32 md:h-80 lg:h-60 xl:h-80 rounded-xl"
                     />

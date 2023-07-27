@@ -52,6 +52,9 @@ export default function Anilist() {
 
   function submitSearch() {
     dispatch({ type: "LOADING_CARD_TRUE" });
+
+    const start = parseInt(startDate) - 1;
+    const end = parseInt(endDate) + 1;
     getSearchAPI(
       keywords,
       format,
@@ -60,8 +63,8 @@ export default function Anilist() {
       source,
       selectedGenre,
       year ? year + "%" : "",
-      parseInt(endDate),
-      parseInt(startDate),
+      endDate ? parseInt(end + "0000") : "",
+      startDate ? parseInt(start + "9999") : "",
       parseInt(season),
       parseInt(episodeMin),
       parseInt(episodeMax),
@@ -414,7 +417,7 @@ export default function Anilist() {
                 onClick={() => setHideFilters(!hideFilters)}
                 className=" md:hidden px-5 py-2 transition-all duration-300 rounded-md focus:ring-4 focus:ring-light_primary focus:dark:ring-dark_primary bg-light_secondary dark:bg-dark_secondary"
               >
-                Show
+                {hideFilters ? "Show" : "Hide"}
               </button>
               <button
                 onClick={() => resetSearch()}

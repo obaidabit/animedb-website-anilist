@@ -389,7 +389,7 @@ export default function Home() {
             Prev
           </button>
           <input
-            className="text-center  rounded-lg"
+            className="text-center w-24 rounded-lg"
             type="text"
             disabled
             value={`${currentPage} / ${totalPages}`}

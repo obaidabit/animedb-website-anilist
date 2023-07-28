@@ -97,7 +97,7 @@ export default function CardListAnilist(props) {
         {loading === true ? (
           <CardLoading></CardLoading>
         ) : data?.length !== 0 && loading === false ? (
-          <div className="grid grid-cols-2 gap-3 px-5 py-5 md:px-0 justify-items-center lg:grid-cols-5 lg:gap-10 sm:gap-5 md:grid-cols-3 md:gap-7 card-list">
+          <div className="grid grid-cols-3 gap-1 pb-5 md:px-0 justify-items-center lg:grid-cols-5 lg:gap-10 sm:gap-5 md:grid-cols-3 md:gap-7 card-list">
             {all
               ? data?.map((data) => (
                   <div
@@ -116,10 +116,10 @@ export default function CardListAnilist(props) {
                       onClick={handleClickEvent}
                       src={data.coverImage.large}
                       alt=""
-                      className="object-cover w-full h-32 md:h-80 lg:h-60 xl:h-80 rounded-xl"
+                      className="object-cover w-full h-36 md:h-80 lg:h-60 xl:h-80 rounded-xl"
                     />
                     <p
-                      className={`text-center mx-auto overflow-hidden max-w-superMini  md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-white text-sm md:text-lg lg:text-xl font-semibold`}
+                      className={`text-center capitalize mx-auto overflow-hidden max-w-superMini  md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-white text-sm md:text-lg lg:text-xl font-semibold`}
                     >
                       <Link to={`/details/${data.idMal}`}>
                         {data.title.romaji}

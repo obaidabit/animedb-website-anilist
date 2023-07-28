@@ -450,7 +450,7 @@ export default function Anilist() {
           Prev
         </button>
         <input
-          className="text-center  rounded-lg"
+          className="text-center w-16 rounded-lg"
           type="text"
           disabled
           value={`${currentPage} `}

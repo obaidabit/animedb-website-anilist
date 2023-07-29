@@ -14,6 +14,7 @@ function getFullInfo(filter, page) {
     .withMedia((media) =>
       media
         .arguments(filter)
+        .withId()
         .withTitles()
         .withDescription()
         .withCoverImage()
@@ -45,7 +46,38 @@ function getFullInfo(filter, page) {
 }
 
 export const getFullAnilistDetailsAPI = (id) => {
-  return getFullInfo({ id });
+  return anilist
+    .mediaQuery({ id: parseInt(id) })
+    .withSeasonYear()
+    .withId()
+    .withTitles("english", "native", "romaji")
+    .withDescription()
+    .withCoverImage()
+    .withBannerImage()
+    .withDuration()
+    .withStartDate()
+    .withEndDate()
+    .withEpisodes()
+    .withAverageScore()
+    .withCharacters()
+    .withExternalLinks("url", "id", "site")
+    .withFormat()
+    .withFavourites()
+    .withMalId()
+    .withMediaListEntries()
+    .withNextAiringEpisode()
+    .withRankings("id", "allTime", "rank", "year", "context", "format")
+    .withRelations()
+    .withSeason()
+    .withSource()
+    .withStatus()
+    .withStreamingEpisodes()
+    .withStudios()
+    .withTags()
+    .withTrending()
+    .withType()
+    .withSynonyms()
+    .fetch();
 };
 
 export const getSearchAPI = (

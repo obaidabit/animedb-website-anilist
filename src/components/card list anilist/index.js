@@ -15,7 +15,7 @@ export default function CardListAnilist(props) {
 
   const handleClickEvent = (event) => {
     event.preventDefault();
-    navigate(`/details/${event.currentTarget.id}`);
+    navigate(`/anilist/details/${event.currentTarget.id}`);
   };
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export default function CardListAnilist(props) {
                     <p
                       className={`text-center capitalize mx-auto overflow-hidden max-w-superMini  md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-white text-sm md:text-lg lg:text-xl font-semibold`}
                     >
-                      <Link to={`/details/${data.idMal}`}>
+                      <Link to={`/anilist/details/${data.id}`}>
                         {data.title.romaji}
                       </Link>
                     </p>
@@ -148,7 +148,7 @@ export default function CardListAnilist(props) {
                     <p
                       className={`text-center mx-auto overflow-hidden max-w-superMini  md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-black text-sm md:text-lg lg:text-xl font-semibold`}
                     >
-                      <Link to={`/details/${data.idMal}`}>
+                      <Link to={`/anilist/details/${data.id}`}>
                         {data.title?.romaji}
                       </Link>
                     </p>

@@ -67,12 +67,23 @@ export const getFullAnilistDetailsAPI = (id) => {
     .withMediaListEntries()
     .withNextAiringEpisode()
     .withRankings("id", "allTime", "rank", "year", "context", "format")
-    .withRelations()
+    .withRelations({
+      edges: (edges) => {
+        edges.withNode((node) =>
+          node.withTitles().withId().withType().withCoverImage().withStartDate()
+        );
+        return edges.withRelationType(2);
+      },
+    })
     .withSeason()
     .withSource()
     .withStatus()
     .withStreamingEpisodes()
-    .withStudios()
+    .withStudios({
+      nodes: (nodes) => {
+        return nodes.withName().withId();
+      },
+    })
     .withTags()
     .withTrending()
     .withType()

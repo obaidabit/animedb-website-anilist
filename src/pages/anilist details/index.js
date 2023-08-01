@@ -12,6 +12,8 @@ import DetailsLoading from "../../components/details loading";
 import MobileContentNav from "../../components/mobile/mobilenav content";
 import Relation from "../../components/content/relation";
 import { getFullAnilistDetailsAPI } from "../../config/anilist";
+import AniListStats from "../../components/content/anilist stats";
+import AnilistRelation from "../../components/content/anilist relation";
 
 export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
   const [data, setData] = useState([]);
@@ -76,28 +78,32 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
   function sortTabs() {
     setTabs((prev) => {
       const sorted = [...prev].sort((a, b) => {
-        const aDate = a.anime.aired.from
-          ? new Date(a.anime.aired.from)
-          : Infinity;
-        const bDate = b.anime.aired.from
-          ? new Date(b.anime.aired.from)
-          : Infinity;
+        const aDate = getDate(a);
+        const bDate = getDate(b);
 
         if (aDate === Infinity && bDate === Infinity) {
           return 0;
-        }
-        if (aDate === Infinity) {
-          return 1;
-        }
-        if (bDate === Infinity) {
+        } else if (aDate === Infinity) {
           return -1;
+        } else if (bDate === Infinity) {
+          return 1;
+        } else {
+          return aDate - bDate;
         }
-
-        return aDate - bDate;
       });
 
       return sorted;
     });
+  }
+
+  function getDate(tab) {
+    return tab.anime.startDate.year
+      ? new Date(
+          tab.anime.startDate.year,
+          tab.anime.startDate.month,
+          tab.anime.startDate.day
+        )
+      : Infinity;
   }
   return (
     <div className="w-full min-h-screen text-gray-700 dark:text-gray-200">
@@ -107,13 +113,13 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
           <div>
             <div className="text-right pr-4 absolute w-full z-50">
               <button
-                onClick={() => deleteTab({ id: id })}
+                onClick={() => deleteTab({ id: parseInt(id) })}
                 className="py-1 mt-2 px-3 rounded-md bg-red-600 text-white mr-2 absolute right-0"
               >
                 Close
               </button>
               <button
-                onClick={() => sortTabs({ id: id })}
+                onClick={() => sortTabs({ id: parseInt(id) })}
                 className="py-1 mt-2 px-3 rounded-md bg-green-400 text-black ml-2 absolute left-0"
               >
                 Sort
@@ -145,9 +151,10 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
                     <summary className="relative text-2xl font-bold text-center  md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
                       {data?.title?.romaji}
                     </summary>
-                    <p className="pt-3 md:pr-5 lg:max-w-full lg:min-h-[18rem] xl:min-h-[7rem] md:max-w-synopsis lg:pr-0 text-justify mx-auto self-center md:text-left text-md">
-                      {data?.description}
-                    </p>
+                    <p
+                      dangerouslySetInnerHTML={{ __html: data?.description }}
+                      className="pt-3 md:pr-5 lg:max-w-full lg:min-h-[18rem] xl:min-h-[7rem] md:max-w-synopsis lg:pr-0 text-justify mx-auto self-center md:text-left text-md"
+                    ></p>
                   </details>
                 </div>
               </div>
@@ -206,6 +213,14 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
                 <p>{data?.averageScore}%</p>
               </div>
               <div className="flex-shrink-0">
+                <h5 className="font-bold text-lg">Studios</h5>
+                <p>
+                  {data?.studios?.nodes && data?.studios?.nodes.length
+                    ? data?.studios.nodes[0].name
+                    : "Unknown"}
+                </p>
+              </div>
+              <div className="flex-shrink-0">
                 <h5 className="font-bold text-lg">Source</h5>
                 <p>{data?.source}</p>
               </div>
@@ -250,11 +265,11 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
                 Relations
               </button>
               <button
-                onClick={() => switchContent(8)}
+                onClick={() => switchContent(9)}
                 className={`uppercase self-end border-b-4 ${
                   contentNav ? "md:hidden" : "md:block"
                 } lg:block border-b-transparent hover:border-b-4 hover:border-b-light_secondary hover:dark:border-b-dark_secondary  pb-2 ${
-                  content === 7
+                  content === 9
                     ? "block border-b-4 border-b-light_secondary dark:border-b-dark_secondary"
                     : "hidden border-b-4 border-b-transparent"
                 } font-bold text-xl`}
@@ -293,6 +308,7 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
                 content6={() => switchContent(6)}
                 content7={() => switchContent(7)}
                 content8={() => switchContent(8)}
+                content9={() => switchContent(9)}
               ></MobileContentNav>
             </div>
             <div className=" flex flex-col mx-auto min-h-[500px]">
@@ -319,8 +335,14 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
               </div>
               <div>
                 {content === 8 && (
-                  <Relation animeId={animeId} setTabs={setTabs}></Relation>
+                  <AnilistRelation
+                    relations={data?.relations}
+                    setTabs={setTabs}
+                  ></AnilistRelation>
                 )}
+              </div>
+              <div>
+                {content === 9 && <AniListStats stats={data.rankings} />}
               </div>
               {isVisible && (
                 <button

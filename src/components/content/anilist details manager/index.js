@@ -18,7 +18,12 @@ export default function AnilistDetailsManager() {
     getFullAnilistDetailsAPI(params.id).then((res) => {
       setTabs((prev) => [
         ...prev,
-        { animeId: params.id, id: uuid(), visiable: true, anime: res },
+        {
+          animeId: parseInt(params.id),
+          id: uuid(),
+          visiable: true,
+          anime: res,
+        },
       ]);
     });
   }, []);

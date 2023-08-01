@@ -134,7 +134,7 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
           </div>
           <div className="w-full transition-all duration-300 h-fit bg-light_primary dark:bg-dark_primary">
             <div className="container flex flex-col mx-auto">
-              <div className="flex flex-col items-center w-full px-5 md:items-start lg:items-center md:flex-row">
+              <div className="flex flex-col items-center w-full px-5 md:items-start lg:items-start md:flex-row">
                 <div className="md:flex -mt-64 md:-mt-64 md:flex-col md:items-center md:gap-10">
                   <div className="flex items-center">
                     <img
@@ -181,11 +181,23 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                     </p>
                   </div>
                 </div>
-                <div className="w-full px-7 md:-mt-8 ">
+                <div className="w-full px-7 md:-mt-2 ">
                   <div className="relative flex flex-col gap-2 justify-between items-center w-full pt-2 lg:flex-row">
-                    <h1 className="relative  text-2xl  font-bold text-center  md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
-                      {data?.title}
-                    </h1>
+                    <div>
+                      <h1 className="relative mb-2 text-2xl  font-bold text-center  md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
+                        {data?.title}
+                      </h1>
+                      <p className="text-lg">
+                        English:{" "}
+                        <span className="font-bold">{data?.title_english}</span>
+                      </p>
+                      <p className="text-lg">
+                        Japanese:{" "}
+                        <span className="font-bold">
+                          {data?.title_japanese}
+                        </span>
+                      </p>
+                    </div>
                     <button
                       className="z-10 bg-amber-200 px-3 py-2 dark:text-black rounded whitespace-nowrap"
                       onClick={() => setResources((prev) => !prev)}
@@ -216,46 +228,43 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                       </div>
                     ) : null}
                   </div>
-                  <div className="flex flex-col justify-between w-full pt-5 lg:flex-row">
-                    <div className="order-2 mt-3 md:mt-0 lg:order-1">
-                      <h3 className="text-2xl font-bold text-center md:text-left">
-                        Synopsis
-                      </h3>
-                    </div>
-                    <div className="flex flex-col items-center justify-center order-1 gap-3 mb-3 md:flex-row md:justify-start lg:order-2 lg:gap-5">
-                      <h3 className="flex gap-1 text-xl font-bold">
-                        Ranked:{""}
-                        <p className="font-normal">
-                          {data?.rank ? `#${data?.rank}` : " NA"}
-                        </p>
-                      </h3>
-                      <h3 className="flex gap-1 text-xl font-bold">
-                        Popularity: {}
-                        <p className="font-normal">
-                          {data?.popularity ? `#${data?.popularity}` : " NA"}
-                        </p>
-                      </h3>
-                      <h3 className="flex gap-1 text-xl font-bold">
-                        Members: {}
-                        <p className="font-normal">
-                          {data?.members
-                            ? data?.members
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                            : " NA"}
-                        </p>
-                      </h3>
-                    </div>
-                  </div>
-                  <details>
-                    <summary>Story</summary>
-                    <p className="pt-3 md:pr-5 lg:max-w-full lg:min-h-[18rem] xl:min-h-[7rem] md:max-w-synopsis lg:pr-0 text-justify mx-auto self-center md:text-left text-md">
+                  <details className="flex flex-col items justify-between w-full pt-5 lg:flex-row">
+                    <summary className="text-2xl font-bold text-center md:text-left flex flex-col md:flex-row justify-between">
+                      Synopsis
+                      <div className="mt-2 md:mt-0 flex flex-col items-center justify-center order-1 gap-3 md:flex-row md:justify-start lg:order-2 lg:gap-5">
+                        <h3 className="flex gap-1 text-xl font-bold">
+                          Ranked:{""}
+                          <p className="font-normal">
+                            {data?.rank ? `#${data?.rank}` : " NA"}
+                          </p>
+                        </h3>
+                        <h3 className="flex gap-1 text-xl font-bold">
+                          Popularity: {}
+                          <p className="font-normal">
+                            {data?.popularity ? `#${data?.popularity}` : " NA"}
+                          </p>
+                        </h3>
+                        <h3 className="flex gap-1 text-xl font-bold">
+                          Members: {}
+                          <p className="font-normal">
+                            {data?.members
+                              ? data?.members
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              : " NA"}
+                          </p>
+                        </h3>
+                      </div>
+                    </summary>
+                    <div className="order-2 mt-3 md:mt-0 lg:order-1"></div>
+
+                    <p className=" md:pr-5 lg:max-w-full lg:min-h-[18rem] xl:min-h-[7rem] md:max-w-synopsis lg:pr-0 text-justify mx-auto self-center md:text-left text-md">
                       {data?.synopsis}
                     </p>
                   </details>
                 </div>
               </div>
-              <div className="flex flex-col items-center justify-between w-full gap-10 px-5 pb-10 xl:flex-row pt-7">
+              <div className="flex flex-col items-center justify-between w-full gap-4 md:gap-10 px-5 pb-10 xl:flex-row pt-3 md:pt-7">
                 <div
                   className={`flex md:hidden w-1/2 xl:flex xl:w-[11%]  justify-center flex-col items-center rounded-2xl transition-colors duration-300 py-1 px-1  ${
                     data?.score
@@ -291,7 +300,7 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                   </p>
                 </div>
                 <div className="flex portrait:flex-col lg:flex-col items-start w-full border-2 border-gray-700 lg:flex dark:border-gray-200 justify-evenly rounded-xl">
-                  <div className="flex flex-col items-center justify-center w-full gap-4 p-5 text-md xl:text-sm xl:flex-row">
+                  <div className="flex flex-col items-center justify-center w-full gap-2 p-5 text-md xl:text-sm xl:flex-row">
                     <p className="flex gap-1 font-bold">
                       Type :
                       <span className="font-normal dark:font-light">
@@ -316,6 +325,28 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                       Duration :
                       <span className="font-normal dark:font-light">
                         {data?.duration ? data?.duration : "unknown"}
+                      </span>
+                    </p>
+                    <p className="flex gap-1 font-bold">
+                      Source :
+                      <span className="font-normal dark:font-light">
+                        {data?.source ? data?.source : "unknown"}
+                      </span>
+                    </p>
+                    <p className="flex gap-1 font-bold">
+                      Premiered :
+                      <span className="font-normal dark:font-light">
+                        {data?.season && data?.year
+                          ? data?.season + " " + data?.year
+                          : "unknown"}
+                      </span>
+                    </p>
+                    <p className="flex gap-1 font-bold">
+                      Demographic :
+                      <span className="font-normal dark:font-light">
+                        {data?.demographics && data?.demographics.length
+                          ? data?.demographics[0].name
+                          : "unknown"}
                       </span>
                     </p>
                   </div>

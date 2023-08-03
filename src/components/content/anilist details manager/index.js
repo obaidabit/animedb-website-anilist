@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
-import Details from "../../../pages/details";
+import React, { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useParams } from "react-router-dom";
-import { getFullDetailsAPI, uuid } from "../../../config";
+import { uuid } from "../../../config";
 import { getFullAnilistDetailsAPI } from "../../../config/anilist";
 import AnilistDetails from "../../../pages/anilist details";
 

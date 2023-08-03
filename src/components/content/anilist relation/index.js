@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import "react-tabs/style/react-tabs.css";
 import CardLoading from "../../card loading";
-import { uuid } from "../../../config";
+import { capitalize, uuid } from "../../../config";
 
 export default function AnilistRelation({ relations, setTabs }) {
   const loading = useSelector((state) => state.cardLoading);
@@ -58,9 +58,11 @@ export default function AnilistRelation({ relations, setTabs }) {
                   className="text-center mx-auto overflow-hidden w-full text-ellipsis md:max-w-mini lg:whitespace-normal sm:text-black sm:dark:text-white lg:text-white lg:dark:text-black text-sm md:text-lg lg:text-xl font-semibold"
                   rel="noreferrer"
                 >
-                  <span className="text-rose-500">{rel?.relationType}</span>
+                  <span className="text-rose-500">
+                    {capitalize(rel?.relationType)}
+                  </span>
                   <br />
-                  <span className="text-lg leading-3 md:leading-none">
+                  <span className="text-lg leading-3 md:leading-none px-1">
                     {rel?.node?.title?.romaji}
                   </span>
                 </a>

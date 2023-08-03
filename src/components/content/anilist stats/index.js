@@ -8,8 +8,6 @@ export default function AniListStats({ stats }) {
 
   useEffect(() => {
     dispatch({ type: "LOADING_CONTENT_TRUE" });
-
-    console.log(stats);
     dispatch({ type: "LOADING_CONTENT_FALSE" });
   }, [dispatch]);
   return (

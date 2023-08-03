@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { getFullDetailsAPI } from "../../config";
+import { capitalize, getFullDetailsAPI } from "../../config";
 import { useSelector, useDispatch } from "react-redux";
 import Videos from "../../components/content/videos";
 import Episodes from "../../components/content/Episodes";
@@ -10,10 +10,11 @@ import CharacterStaff from "../../components/content/character & staff";
 import MoreInfo from "../../components/content/more info";
 import DetailsLoading from "../../components/details loading";
 import MobileContentNav from "../../components/mobile/mobilenav content";
-import Relation from "../../components/content/relation";
 import { getFullAnilistDetailsAPI } from "../../config/anilist";
 import AniListStats from "../../components/content/anilist stats";
 import AnilistRelation from "../../components/content/anilist relation";
+import AnilistMobileContentNav from "../../components/mobile/anilist mobilenav content";
+import AnilistEpisodes from "../../components/content/Anilist Episodes";
 
 export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
   const [data, setData] = useState([]);
@@ -21,7 +22,6 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
   const [contentNav, setContentNav] = useState(true);
   const loading = useSelector((state) => state.detailsLoading);
   const [isVisible, setIsVisible] = useState(true);
-  const [resources, setResources] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -113,7 +113,7 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
           <div>
             <div className="text-right pr-4 absolute w-full z-50">
               <button
-                onClick={() => deleteTab({ id: parseInt(id) })}
+                onClick={() => deleteTab({ id: id })}
                 className="py-1 mt-2 px-3 rounded-md bg-red-600 text-white mr-2 absolute right-0"
               >
                 Close
@@ -148,7 +148,7 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
               <div className="w-full px-7">
                 <div className="flex flex-col items-start justify-between w-full pt-3 lg:flex-row">
                   <details className="w-full">
-                    <summary className="relative text-2xl font-bold text-center  md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
+                    <summary className="cursor-pointer relative text-2xl font-bold text-center  md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
                       {data?.title?.romaji}
                     </summary>
                     <p
@@ -176,7 +176,7 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
               </div>
               <div className="flex-shrink-0">
                 <h5 className="font-bold text-lg">Status</h5>
-                <p>{data?.status}</p>
+                <p>{capitalize(data?.status)}</p>
               </div>
               <div className="flex-shrink-0">
                 <h5 className="font-bold text-lg">Start Date</h5>
@@ -205,7 +205,7 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
               <div className="flex-shrink-0">
                 <h5 className="font-bold text-lg">Season</h5>
                 <p>
-                  {data?.season} {data?.seasonYear}
+                  {capitalize(data?.season)} {data?.seasonYear}
                 </p>
               </div>
               <div className="flex-shrink-0">
@@ -216,21 +216,21 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
                 <h5 className="font-bold text-lg">Studios</h5>
                 <p>
                   {data?.studios?.nodes && data?.studios?.nodes.length
-                    ? data?.studios.nodes[0].name
+                    ? capitalize(data?.studios.nodes[0].name)
                     : "Unknown"}
                 </p>
               </div>
               <div className="flex-shrink-0">
                 <h5 className="font-bold text-lg">Source</h5>
-                <p>{data?.source}</p>
+                <p>{capitalize(data?.source)}</p>
               </div>
               <div className="flex-shrink-0">
                 <h5 className="font-bold text-lg">Romaji</h5>
-                <p>{data?.title?.romaji}</p>
+                <p>{capitalize(data?.title?.romaji)}</p>
               </div>
               <div className="flex-shrink-0">
                 <h5 className="font-bold text-lg">English</h5>
-                <p>{data?.title?.english}</p>
+                <p>{capitalize(data?.title?.english)}</p>
               </div>
               <div className="flex-shrink-0">
                 <h5 className="font-bold text-lg">Native</h5>
@@ -299,7 +299,7 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
               >
                 Characters
               </button>
-              <MobileContentNav
+              <AnilistMobileContentNav
                 content1={() => switchContent(1)}
                 content2={() => switchContent(2)}
                 content3={() => switchContent(3)}
@@ -309,12 +309,16 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
                 content7={() => switchContent(7)}
                 content8={() => switchContent(8)}
                 content9={() => switchContent(9)}
-              ></MobileContentNav>
+              ></AnilistMobileContentNav>
             </div>
             <div className=" flex flex-col mx-auto min-h-[500px]">
               <div>{content === 1 && <Videos animeId={animeId}></Videos>}</div>
               <div>
-                {content === 2 && <Episodes animeId={animeId}></Episodes>}
+                {content === 2 && (
+                  <AnilistEpisodes
+                    episodes={data?.streamingEpisodes}
+                  ></AnilistEpisodes>
+                )}
               </div>
               <div>
                 {content === 3 && <Reviews animeId={animeId}></Reviews>}

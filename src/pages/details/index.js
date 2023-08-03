@@ -187,13 +187,15 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                       <h1 className="relative mb-2 text-2xl  font-bold text-center  md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
                         {data?.title}
                       </h1>
-                      <p className="text-lg">
+                      <p className="text-md">
                         English:{" "}
-                        <span className="font-bold">{data?.title_english}</span>
+                        <span className="ml-2 font-bold">
+                          {data?.title_english}
+                        </span>
                       </p>
-                      <p className="text-lg">
+                      <p className="text-md">
                         Japanese:{" "}
-                        <span className="font-bold">
+                        <span className="ml-2 font-bold">
                           {data?.title_japanese}
                         </span>
                       </p>
@@ -229,22 +231,22 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                     ) : null}
                   </div>
                   <details className="flex flex-col items justify-between w-full pt-5 lg:flex-row">
-                    <summary className="text-2xl font-bold text-center md:text-left flex flex-col md:flex-row justify-between">
-                      Synopsis
-                      <div className="mt-2 md:mt-0 flex flex-col items-center justify-center order-1 gap-3 md:flex-row md:justify-start lg:order-2 lg:gap-5">
-                        <h3 className="flex gap-1 text-xl font-bold">
+                    <summary className=" font-bold text-center md:text-left flex flex-col md:flex-row justify-between">
+                      <span className="text-2xl cursor-pointer">Synopsis</span>
+                      <div className="mt-2 md:text-lg text-md md:mt-0 flex flex-col items-center justify-center order-1 gap-3 md:flex-row md:justify-start lg:order-2 lg:gap-5">
+                        <h3 className="flex gap-1 text-md font-bold">
                           Ranked:{""}
                           <p className="font-normal">
                             {data?.rank ? `#${data?.rank}` : " NA"}
                           </p>
                         </h3>
-                        <h3 className="flex gap-1 text-xl font-bold">
+                        <h3 className="flex gap-1 text-md font-bold">
                           Popularity: {}
                           <p className="font-normal">
                             {data?.popularity ? `#${data?.popularity}` : " NA"}
                           </p>
                         </h3>
-                        <h3 className="flex gap-1 text-xl font-bold">
+                        <h3 className="flex gap-1 text-md font-bold">
                           Members: {}
                           <p className="font-normal">
                             {data?.members

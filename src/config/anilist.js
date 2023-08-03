@@ -1,8 +1,8 @@
 import { anilist } from "anilist";
 
 function getFullInfo(filter, page) {
-  return anilist
-    .pageQuery({ page: page, perPage: 30 })
+  return anilist.query
+    .page({ page: page, perPage: 30 })
     .withPageInfo((pageInfo) =>
       pageInfo
         .withTotal()
@@ -46,8 +46,8 @@ function getFullInfo(filter, page) {
 }
 
 export const getFullAnilistDetailsAPI = (id) => {
-  return anilist
-    .mediaQuery({ id: parseInt(id) })
+  return anilist.query
+    .media({ id: parseInt(id) })
     .withSeasonYear()
     .withId()
     .withTitles("english", "native", "romaji")
@@ -59,7 +59,12 @@ export const getFullAnilistDetailsAPI = (id) => {
     .withEndDate()
     .withEpisodes()
     .withAverageScore()
-    .withCharacters()
+    .withCharacters({
+      edges: (edges) => {
+        edges.withNode((node) => node.withId());
+        return edges.withRole();
+      },
+    })
     .withExternalLinks("url", "id", "site")
     .withFormat()
     .withFavourites()
@@ -78,7 +83,6 @@ export const getFullAnilistDetailsAPI = (id) => {
     .withSeason()
     .withSource()
     .withStatus()
-    .withStreamingEpisodes()
     .withStudios({
       nodes: (nodes) => {
         return nodes.withName().withId();
@@ -88,6 +92,7 @@ export const getFullAnilistDetailsAPI = (id) => {
     .withTrending()
     .withType()
     .withSynonyms()
+    .withStreamingEpisodes()
     .fetch();
 };
 

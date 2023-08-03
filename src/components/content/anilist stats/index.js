@@ -18,7 +18,7 @@ export default function AniListStats({ stats }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {stats?.map((stat) => (
             <div
-              className="text-center shadow rounded p-2 bg-slate-200"
+              className="text-center shadow rounded p-2 bg-slate-200 dark:bg-slate-500"
               key={stat.id}
             >
               <span className="font-bold mr-1">#{stat.rank}</span>

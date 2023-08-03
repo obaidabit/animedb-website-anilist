@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { getEpisodesAPI, uuid } from "../../../config";
+import React, { useEffect } from "react";
+import { uuid } from "../../../config";
 import { useSelector, useDispatch } from "react-redux";
 import ContentLoading from "../../content loading";
 

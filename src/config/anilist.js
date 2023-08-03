@@ -45,6 +45,26 @@ function getFullInfo(filter, page) {
     .fetch();
 }
 
+export const getAnilistCharacter = (id, page = 1) => {
+  return anilist.query
+    .media({ id: parseInt(id) })
+    .withCharacters({
+      pageInfo: (pageInfo) =>
+        pageInfo
+          .withTotal()
+          .hasNextPage()
+          .withCurrentPage()
+          .withLastPage()
+          .withPerPage(),
+      args: {
+        page: page,
+        sort: ["ROLE", "RELEVANCE", "ID"],
+      },
+      edges: (edges) =>
+        edges.withNode((node) => node.withId().withName().withImage()),
+    })
+    .fetch();
+};
 export const getFullAnilistDetailsAPI = (id) => {
   return anilist.query
     .media({ id: parseInt(id) })
@@ -59,12 +79,7 @@ export const getFullAnilistDetailsAPI = (id) => {
     .withEndDate()
     .withEpisodes()
     .withAverageScore()
-    .withCharacters({
-      edges: (edges) => {
-        edges.withNode((node) => node.withId());
-        return edges.withRole();
-      },
-    })
+    .withCharacters()
     .withExternalLinks("url", "id", "site")
     .withFormat()
     .withFavourites()

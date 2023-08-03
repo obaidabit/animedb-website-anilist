@@ -15,6 +15,7 @@ import AniListStats from "../../components/content/anilist stats";
 import AnilistRelation from "../../components/content/anilist relation";
 import AnilistMobileContentNav from "../../components/mobile/anilist mobilenav content";
 import AnilistEpisodes from "../../components/content/Anilist Episodes";
+import AnilistCharacterStaff from "../../components/content/anilist character & staff";
 
 export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
   const [data, setData] = useState([]);
@@ -331,7 +332,9 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
               <div>{content === 5 && <Stats animeId={animeId}></Stats>}</div>
               <div>
                 {content === 6 && (
-                  <CharacterStaff animeId={animeId}></CharacterStaff>
+                  <AnilistCharacterStaff
+                    animeId={data?.id}
+                  ></AnilistCharacterStaff>
                 )}
               </div>
               <div>

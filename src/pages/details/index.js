@@ -184,7 +184,7 @@ export default function Details({ animeId, setTabs, deleteTab, id }) {
                 <div className="w-full px-7 md:-mt-2 ">
                   <div className="relative flex flex-col gap-2 justify-between items-center w-full pt-2 lg:flex-row">
                     <div>
-                      <h1 className="relative mb-2 text-2xl  font-bold text-center  md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
+                      <h1 className="relative mb-4 text-2xl  font-bold text-center  md:overflow-hidden md:text-ellipsis md:text-3xl md:text-left md:max-w-read lg:max-w-full ">
                         {data?.title}
                       </h1>
                       <p className="text-md">

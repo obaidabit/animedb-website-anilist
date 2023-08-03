@@ -62,7 +62,7 @@ export default function AnilistRelation({ relations, setTabs }) {
                     {capitalize(rel?.relationType)}
                   </span>
                   <br />
-                  <span className="text-lg leading-3 md:leading-none px-1">
+                  <span className="text-lg leading-3 dark:text-white md:leading-none px-1">
                     {rel?.node?.title?.romaji}
                   </span>
                 </a>

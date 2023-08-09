@@ -5,6 +5,12 @@ import "./global.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
+import { HomeFilterProvider, HomeTabsProvider } from "./hooks/HomeContext";
+import {
+  AnilistFilterProvider,
+  AnilistTabsProvider,
+} from "./hooks/AnilistContext";
+
 const redux = require("redux");
 
 const createStore = redux.createStore;
@@ -84,7 +90,15 @@ const store = createStore(rootReducer);
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Provider store={store}>
-      <App />
+      <HomeFilterProvider>
+        <AnilistFilterProvider>
+          <HomeTabsProvider>
+            <AnilistTabsProvider>
+              <App />
+            </AnilistTabsProvider>
+          </HomeTabsProvider>
+        </AnilistFilterProvider>
+      </HomeFilterProvider>
     </Provider>
   </BrowserRouter>
 );

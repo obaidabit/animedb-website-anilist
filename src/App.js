@@ -2,7 +2,6 @@ import Home from "./pages/filter home";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
-import Details from "./pages/details";
 import Search from "./pages/search";
 import About from "./pages/about";
 import Anime from "./pages/anime";

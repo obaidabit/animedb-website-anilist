@@ -2,26 +2,39 @@ import React, { useEffect, useRef, useState } from "react";
 import CardList from "../../components/card list";
 import { getAnimeGenreAPI, getSearchAPI } from "../../config";
 import { useDispatch } from "react-redux";
+import { useHomeFilter } from "../../hooks/HomeContext";
 
 export default function Home() {
   const [data, setData] = useState([]);
   const [genres, setGenres] = useState([]);
-  const [sort, setSort] = useState("asc");
-  const [orderBy, setOrderBy] = useState("");
-  const [genre, setGenre] = useState("");
-  const [animeType, setAnimeType] = useState("");
-  const [status, setStatus] = useState("");
-  const [rating, setRating] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [keywords, setKeywords] = useState("");
   const [nextPage, setNextPage] = useState(0);
   const [firstRender, setFirstRender] = useState(true);
-  const [startDate, setstartDate] = useState("");
-  const [endDate, setendDate] = useState("");
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
   const dispatch = useDispatch();
+
+  const {
+    sort,
+    setSort,
+    orderBy,
+    setOrderBy,
+    genre,
+    setGenre,
+    animeType,
+    setAnimeType,
+    status,
+    setStatus,
+    rating,
+    setRating,
+    keywords,
+    setKeywords,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+  } = useHomeFilter();
 
   function submitSearch(page) {
     dispatch({ type: "LOADING_CARD_TRUE" });
@@ -62,17 +75,12 @@ export default function Home() {
     setKeywords("");
     setSort("asc");
     setCurrentPage(1);
-    setstartDate("");
-    setendDate("");
+    setStartDate("");
+    setEndDate("");
   }
 
   useEffect(() => {
-    getSearchAPI().then((result) => {
-      setNextPage(result.pagination.last_visible_page);
-      setTotalPages(result.pagination.last_visible_page);
-      setData(result.data);
-      dispatch({ type: "LOADING_CARD_FALSE" });
-    });
+    submitSearch();
     getAnimeGenreAPI().then((result) => setGenres(result.data));
   }, []);
 
@@ -328,7 +336,7 @@ export default function Home() {
               id="start-date"
               className="rounded border-1 w-32 focus:outline-none dark:bg-transparent dark:text-white"
               value={startDate}
-              onChange={(e) => setstartDate(e.target.value)}
+              onChange={(e) => setStartDate(e.target.value)}
               onClick={(e) => e.target.showPicker()}
             />
           </div>
@@ -347,7 +355,7 @@ export default function Home() {
               ref={endDateRef}
               className="rounded border-1 w-32 focus:outline-none dark:bg-transparent dark:text-white"
               value={endDate}
-              onChange={(e) => setendDate(e.target.value)}
+              onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
           <div className="relative gap-3 inline-grid grid-rows-1 grid-cols-2 col-span-full md:col-span-1 justify-between">

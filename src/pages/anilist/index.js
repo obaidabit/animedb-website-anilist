@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
-import CardList from "../../components/card list";
 import { useDispatch } from "react-redux";
-import { getFullAnilistDetailsAPI, getSearchAPI } from "../../config/anilist";
-import { FuzzyDate } from "anilist";
+import { getSearchAPI } from "../../config/anilist";
 import { uuid } from "../../config";
 import CardListAnilist from "../../components/card list anilist";
+import { useAnilistFilter } from "../../hooks/AnilistContext";
 
 export default function Anilist() {
   const [data, setData] = useState([]);
   const [firstRender, setFirstRender] = useState(true);
-  const [keywords, setKeywords] = useState("");
   const [genres, setGenres] = useState([
     "action",
     "ecchi",
@@ -30,24 +28,42 @@ export default function Anilist() {
     "slice of Life",
     "sports",
   ]);
-  const [selectedGenre, setSelectedGenre] = useState("");
-  const [year, setYear] = useState();
-  const [season, setSeason] = useState("");
-  const [format, setFormat] = useState("");
-  const [status, setStatus] = useState("");
-  const [source, setSource] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [episodeMin, setEpisodeMin] = useState("");
-  const [episodeMax, setEpisodeMax] = useState("");
-  const [durationMin, setDurationMin] = useState("");
-  const [durationMax, setDurationMax] = useState("");
+
   const [hideFilters, setHideFilters] = useState(true);
-  const [sort, setSort] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [nextPage, setNextPage] = useState(false);
 
+  const {
+    sort,
+    setSort,
+    selectedGenre,
+    setSelectedGenre,
+    status,
+    setStatus,
+    keywords,
+    setKeywords,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    year,
+    setYear,
+    season,
+    setSeason,
+    format,
+    setFormat,
+    source,
+    setSource,
+    episodeMin,
+    setEpisodeMin,
+    episodeMax,
+    setEpisodeMax,
+    durationMin,
+    setDurationMin,
+    durationMax,
+    setDurationMax,
+  } = useAnilistFilter();
   const dispatch = useDispatch();
 
   function submitSearch() {

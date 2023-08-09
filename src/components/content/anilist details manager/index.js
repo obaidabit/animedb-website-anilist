@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useParams } from "react-router-dom";
 import { uuid } from "../../../config";
 import { getFullAnilistDetailsAPI } from "../../../config/anilist";
 import AnilistDetails from "../../../pages/anilist details";
+import { useAnilistTabs } from "../../../hooks/AnilistContext";
 
 export default function AnilistDetailsManager() {
   const params = useParams();
-  const [tabs, setTabs] = useState([]);
+  const { tabs, setTabs } = useAnilistTabs();
 
   function deleteTab(rel) {
     setTabs((prev) => prev.filter((ent) => ent.id !== rel.id));
@@ -15,15 +16,16 @@ export default function AnilistDetailsManager() {
 
   useEffect(() => {
     getFullAnilistDetailsAPI(params.id).then((res) => {
-      setTabs((prev) => [
-        ...prev,
-        {
-          animeId: parseInt(params.id),
-          id: uuid(),
-          visiable: true,
-          anime: res,
-        },
-      ]);
+      if (tabs.length === 0)
+        setTabs((prev) => [
+          ...prev,
+          {
+            animeId: parseInt(params.id),
+            id: uuid(),
+            visiable: true,
+            anime: res,
+          },
+        ]);
     });
   }, []);
 

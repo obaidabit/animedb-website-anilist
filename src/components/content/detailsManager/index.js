@@ -3,10 +3,11 @@ import Details from "../../../pages/details";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useParams } from "react-router-dom";
 import { getFullDetailsAPI, uuid } from "../../../config";
+import { useHomeTabs } from "../../../hooks/HomeContext";
 
 export default function DetailsManager() {
   const params = useParams();
-  const [tabs, setTabs] = useState([]);
+  const { tabs, setTabs } = useHomeTabs();
 
   function deleteTab(rel) {
     setTabs((prev) => prev.filter((ent) => ent.id !== rel.id));
@@ -14,10 +15,11 @@ export default function DetailsManager() {
 
   useEffect(() => {
     getFullDetailsAPI(params.id).then((res) => {
-      setTabs((prev) => [
-        ...prev,
-        { animeId: params.id, id: uuid(), visiable: true, anime: res.data },
-      ]);
+      if (tabs.length === 0)
+        setTabs((prev) => [
+          ...prev,
+          { animeId: params.id, id: uuid(), visiable: true, anime: res.data },
+        ]);
     });
   }, []);
 

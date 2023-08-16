@@ -16,6 +16,15 @@ export default function AnilistDetailsManager() {
 
   useEffect(() => {
     getFullAnilistDetailsAPI(params.id).then((res) => {
+      if (tabs.length !== 0 && tabs[0].animeId !== parseInt(params.id))
+        return setTabs([
+          {
+            animeId: parseInt(params.id),
+            id: uuid(),
+            visiable: true,
+            anime: res,
+          },
+        ]);
       if (tabs.length === 0)
         setTabs((prev) => [
           ...prev,

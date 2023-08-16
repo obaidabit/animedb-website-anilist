@@ -12,7 +12,7 @@ export default function MobileNav(props) {
         <Link
           onClick={props.onClick}
           className="text-3xl font-semibold "
-          to="/"
+          to="https://animedb-rz0o.onrender.com"
         >
           Home
         </Link>
@@ -26,7 +26,7 @@ export default function MobileNav(props) {
         <Link
           onClick={props.onClick}
           className="text-3xl font-semibold "
-          to="anilist"
+          to="/"
         >
           Anilist
         </Link>

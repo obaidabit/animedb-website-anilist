@@ -94,7 +94,6 @@ export default function Anilist() {
       setCurrentPage(res.pageInfo.currentPage);
       dispatch({ type: "LOADING_CARD_FALSE" });
       setFirstRender(false);
-      console.log(res);
     });
   }
   function resetSearch() {

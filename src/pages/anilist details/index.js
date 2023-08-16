@@ -1,15 +1,9 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { capitalize, getFullDetailsAPI } from "../../config";
+import React, { useEffect, useState, useCallback } from "react";
+import { capitalize } from "../../config";
 import { useSelector, useDispatch } from "react-redux";
-import Videos from "../../components/content/videos";
-import Episodes from "../../components/content/Episodes";
-import Reviews from "../../components/content/reviews";
-import Recommendation from "../../components/content/recommendations";
-import Stats from "../../components/content/stats";
-import CharacterStaff from "../../components/content/character & staff";
+
 import MoreInfo from "../../components/content/more info";
 import DetailsLoading from "../../components/details loading";
-import MobileContentNav from "../../components/mobile/mobilenav content";
 import { getFullAnilistDetailsAPI } from "../../config/anilist";
 import AniListStats from "../../components/content/anilist stats";
 import AnilistRelation from "../../components/content/anilist relation";
@@ -65,7 +59,6 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
     dispatch({ type: "LOADING_DETAILS_TRUE" });
     getFullAnilistDetailsAPI(animeId).then((result) => {
       if (mounted) {
-        console.log(result);
         setData(result);
         switchContent(8);
         dispatch({ type: "LOADING_DETAILS_FALSE" });
@@ -313,7 +306,6 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
               ></AnilistMobileContentNav>
             </div>
             <div className=" flex flex-col mx-auto min-h-[500px]">
-              <div>{content === 1 && <Videos animeId={animeId}></Videos>}</div>
               <div>
                 {content === 2 && (
                   <AnilistEpisodes
@@ -321,15 +313,6 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
                   ></AnilistEpisodes>
                 )}
               </div>
-              <div>
-                {content === 3 && <Reviews animeId={animeId}></Reviews>}
-              </div>
-              <div>
-                {content === 4 && (
-                  <Recommendation animeId={animeId}></Recommendation>
-                )}
-              </div>
-              <div>{content === 5 && <Stats animeId={animeId}></Stats>}</div>
               <div>
                 {content === 6 && (
                   <AnilistCharacterStaff

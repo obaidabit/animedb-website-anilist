@@ -101,8 +101,8 @@ export default function CardListAnilist(props) {
             {all
               ? data?.map((data) => (
                   <div
-                    key={data.idMal}
-                    id={data.idMal}
+                    key={data.id}
+                    id={data.id}
                     className="relative w-full px-1 text-center py-1 dark:text-white overflow-hidden transition-all duration-200 lg:w-full lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:text-white lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
                     // className="relative w-full px-1 py-1 overflow-hidden transition-all duration-200 lg:w-full lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:bg-white lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
                   >
@@ -112,7 +112,7 @@ export default function CardListAnilist(props) {
                       </p>
                     ) : null}
                     <img
-                      id={data.idMal}
+                      id={data.id}
                       onClick={handleClickEvent}
                       src={data.coverImage.large}
                       alt=""
@@ -134,8 +134,8 @@ export default function CardListAnilist(props) {
                 ))
               : data?.slice(0, 5).map((data) => (
                   <div
-                    key={data.idMal}
-                    id={data.idMal}
+                    key={data.id}
+                    id={data.id}
                     className="relative w-full px-1 py-1 overflow-hidden transition-all duration-200 lg:w-full lg:px-0 lg:py-0 lg:hover:-translate-y-2 lg:hover:px-1 lg:hover:py-1 bg-light_secondary dark:bg-dark_secondary lg:bg-white lg:dark:bg-black lg:hover:bg-light_secondary lg:hover:dark:bg-dark_secondary h-fit card rounded-xl "
                   >
                     <img

@@ -62,6 +62,7 @@ export default function AnilistDetailsManager() {
               id={rel.id}
               animeId={rel.animeId}
               deleteTab={deleteTab}
+              tabs={tabs}
               setTabs={setTabs}
             />
           </TabPanel>

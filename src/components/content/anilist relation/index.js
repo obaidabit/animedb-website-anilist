@@ -5,7 +5,7 @@ import "react-tabs/style/react-tabs.css";
 import CardLoading from "../../card loading";
 import { capitalize, uuid } from "../../../config";
 
-export default function AnilistRelation({ relations, setTabs }) {
+export default function AnilistRelation({ relations, setTabs, tabs }) {
   const loading = useSelector((state) => state.cardLoading);
   const [data, setData] = useState(null);
   const dispatch = useDispatch();
@@ -22,6 +22,8 @@ export default function AnilistRelation({ relations, setTabs }) {
   }, [dispatch, relations]);
 
   function showSubRelated(rel) {
+    const existedAnime = tabs.find((an) => an.anime.id === rel.node.id);
+    if (existedAnime) return;
     setTabs((prev) => [
       ...prev,
       {

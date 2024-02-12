@@ -11,7 +11,13 @@ import AnilistMobileContentNav from "../../components/mobile/anilist mobilenav c
 import AnilistEpisodes from "../../components/content/Anilist Episodes";
 import AnilistCharacterStaff from "../../components/content/anilist character & staff";
 
-export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
+export default function AnilistDetails({
+  animeId,
+  setTabs,
+  tabs,
+  deleteTab,
+  id,
+}) {
   const [data, setData] = useState([]);
   const [content, setContent] = useState(0);
   const [contentNav, setContentNav] = useState(true);
@@ -328,6 +334,7 @@ export default function AnilistDetails({ animeId, setTabs, deleteTab, id }) {
                   <AnilistRelation
                     relations={data?.relations}
                     setTabs={setTabs}
+                    tabs={tabs}
                   ></AnilistRelation>
                 )}
               </div>

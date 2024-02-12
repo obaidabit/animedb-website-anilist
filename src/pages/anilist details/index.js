@@ -11,6 +11,16 @@ import AnilistMobileContentNav from "../../components/mobile/anilist mobilenav c
 import AnilistEpisodes from "../../components/content/Anilist Episodes";
 import AnilistCharacterStaff from "../../components/content/anilist character & staff";
 
+function viewDate(date) {
+  if (!date) return null;
+  const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  });
+  return dateFormatter.format(new Date(date));
+}
+
 export default function AnilistDetails({
   animeId,
   setTabs,
@@ -84,9 +94,9 @@ export default function AnilistDetails({
         if (aDate === Infinity && bDate === Infinity) {
           return 0;
         } else if (aDate === Infinity) {
-          return -1;
-        } else if (bDate === Infinity) {
           return 1;
+        } else if (bDate === Infinity) {
+          return -1;
         } else {
           return aDate - bDate;
         }
@@ -182,11 +192,13 @@ export default function AnilistDetails({
                 <h5 className="font-bold text-lg">Start Date</h5>
                 {data?.startDate?.year ? (
                   <p>
-                    {new Date(
-                      data?.startDate.year,
-                      data?.startDate.month - 1
-                    ).toLocaleString("default", { month: "short" })}
-                    /{data?.startDate.day}/{data?.startDate.year}
+                    {viewDate(
+                      new Date(
+                        data?.startDate.year,
+                        data?.startDate.month - 1,
+                        data?.startDate.day
+                      )
+                    )}
                   </p>
                 ) : null}
               </div>
@@ -194,11 +206,13 @@ export default function AnilistDetails({
                 <h5 className="font-bold text-lg">Start End</h5>
                 {data?.endDate?.year ? (
                   <p>
-                    {new Date(
-                      data?.endDate.year,
-                      data?.endDate.month - 1
-                    ).toLocaleString("default", { month: "short" })}
-                    /{data?.endDate.day}/{data?.endDate.year}
+                    {viewDate(
+                      new Date(
+                        data?.endDate.year,
+                        data?.endDate.month - 1,
+                        data?.endDate.day
+                      )
+                    )}
                   </p>
                 ) : null}
               </div>
